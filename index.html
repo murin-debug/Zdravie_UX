@@ -1369,11 +1369,7 @@ if (summaryEl) {
 }
 showDetectedMetaFromAnalysis();
 
-// po spracovaní automaticky posuň používateľa na hlavný AI výsledok
-const summaryEl = document.getElementById("summaryBox");
-if (summaryEl) {
-  summaryEl.scrollIntoView({ behavior: "smooth", block: "start" });
-}
+
       } catch (error) {
         console.error("Chyba pri AI analýze:", error);
         if (analysis) analysis.value = "AI analýza zlyhala: " + error.message;
