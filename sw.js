@@ -1,4 +1,4 @@
-const CACHE_NAME = "zdravie-ux-v2";
+const CACHE_NAME = "zdravie-ux-v3";
 const ASSETS = [
   "./",
   "./index.html",
@@ -23,6 +23,7 @@ self.addEventListener("activate", (event) => {
           if (key !== CACHE_NAME) {
             return caches.delete(key);
           }
+          return null;
         })
       )
     ).then(() => self.clients.claim())
@@ -36,7 +37,7 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(req.url);
 
-  // Necacheuj AI backend ani iné API requesty
+  // Necacheuj AI backend ani API requesty
   if (
     url.pathname.startsWith("/api/") ||
     url.hostname.includes("onrender.com")
@@ -49,11 +50,20 @@ self.addEventListener("fetch", (event) => {
     caches.match(req).then((cached) => {
       if (cached) return cached;
 
-      return fetch(req).then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(req, copy)).catch(() => {});
-        return response;
-      });
+      return fetch(req)
+        .then((response) => {
+          if (!response || response.status !== 200 || response.type !== "basic") {
+            return response;
+          }
+
+          const copy = response.clone();
+          caches.open(CACHE_NAME)
+            .then((cache) => cache.put(req, copy))
+            .catch(() => {});
+
+          return response;
+        })
+        .catch(() => cached);
     })
   );
 });
