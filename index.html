@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zdravie-UX</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#1aa7a8" />
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#eef3f5;
+      --card:#ffffff;
+      --text:#182230;
+      --muted:#5f6b7a;
+      --line:#dce6ea;
+      --brand:#1aa7a8;
+      --brand-dark:#148b8c;
+      --primary:#19b6b8;
+      --primary-dark:#0f9c9e;
+      --soft:#e9f8f8;
+      --danger:#c63d3d;
+      --danger-bg:#fff1f1;
+      --success:#138a46;
+      --success-bg:#e9f9ef;
+      --shadow:0 8px 24px rgba(16, 24, 40, 0.06);
+      --radius:24px;
+      --radius-sm:16px;
+      --nav-h:86px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family: Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    .topbar{
+      height:78px;
+      background:var(--brand);
+      color:#0c2e2f;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      font-weight:700;
+      letter-spacing:.2px;
+      box-shadow:0 2px 12px rgba(0,0,0,.06);
+      position:sticky;
+      top:0;
+      z-index:20;
+    }
+
+    .shell{
+      max-width:1024px;
+      margin:0 auto;
+      padding:0 18px calc(var(--nav-h) + 24px);
+    }
+
+    .app-header{
+      background:#f4f8f9;
+      border-bottom:1px solid var(--line);
+      padding:14px 0 18px;
+    }
+
+    .brand-row{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      max-width:1024px;
+      margin:0 auto;
+      padding:0 18px;
+    }
+
+    .brand-badge{
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      background:linear-gradient(180deg,#39d4d2,#1aa7a8);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:24px;
+      box-shadow:0 6px 18px rgba(26,167,168,.25);
+      flex-shrink:0;
+    }
+
+    .brand-title{
+      font-size:20px;
+      font-weight:800;
+      line-height:1.1;
+      margin:0;
+    }
+
+    .brand-sub{
+      margin:2px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      font-weight:600;
+    }
+
+    .tab-section{display:none}
+    .tab-section.active{display:block}
+
+    .grid-main{
+      display:grid;
+      grid-template-columns:1.45fr .95fr;
+      gap:16px;
+      margin-top:22px;
+    }
+
+    .stack{
+      display:grid;
+      gap:16px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid #e5ecef;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .card h2,.card h3{
+      margin:0 0 10px 0;
+      color:#162033;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:1.5;
+      font-size:16px;
+      margin:0 0 14px 0;
+    }
+
+    .muted{color:var(--muted)}
+    .small{font-size:13px}
+    .tiny{font-size:12px}
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin:14px 0 12px;
+    }
+
+    button,.btn-like{
+      border:none;
+      border-radius:16px;
+      padding:14px 18px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:700;
+      transition:.18s ease;
+      font-family:inherit;
+    }
+
+    button:hover,.btn-like:hover{transform:translateY(-1px)}
+    button.primary,.btn-like.primary{
+      background:var(--primary);
+      color:#fff;
+      box-shadow:0 6px 14px rgba(25,182,184,.22);
+    }
+    button.primary:hover,.btn-like.primary:hover{background:var(--primary-dark)}
+
+    button.secondary{
+      background:#ffffff;
+      color:#162033;
+      border:1px solid #d8e3e7;
+    }
+
+    button.light{
+      background:#edf3f5;
+      color:#162033;
+      border:1px solid #dbe5e9;
+    }
+
+    button.danger{
+      background:#4d5d75;
+      color:#fff;
+    }
+
+    .stat-row{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:8px;
+    }
+
+    .stat-box{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px 14px 12px;
+      background:#fbfcfd;
+      min-height:84px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .stat-number{
+      font-size:20px;
+      font-weight:800;
+      color:#162033;
+      margin-bottom:4px;
+    }
+
+    .list-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid #e6eef1;
+    }
+
+    .recent-list{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .recent-item{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      background:#fcfdfd;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 14px;
+      border-radius:999px;
+      background:#ddf5f3;
+      color:#107978;
+      font-size:13px;
+      font-weight:700;
+      border:1px solid #bae9e4;
+      white-space:nowrap;
+    }
+
+    .safety-box{
+      border:1px solid #bfe2db;
+      background:#effbf8;
+      color:#1e665f;
+      border-radius:18px;
+      padding:16px;
+      line-height:1.45;
+      font-size:15px;
+      font-weight:700;
+    }
+
+    .warning-box{
+      border:1px solid #f1c3c3;
+      background:var(--danger-bg);
+      color:#a73535;
+      border-radius:18px;
+      padding:16px;
+      line-height:1.45;
+      font-size:15px;
+      font-weight:700;
+      margin-top:14px;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .mini-card{
+      background:#f7fbfc;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      min-height:96px;
+    }
+
+    .mini-card h3{
+      font-size:18px;
+      margin-bottom:8px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+      margin-bottom:12px;
+    }
+
+    .field label{
+      font-size:14px;
+      font-weight:700;
+      color:#334155;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    textarea,
+    select{
+      width:100%;
+      border:1px solid #cfdbe0;
+      background:#fff;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:15px;
+      font-family:inherit;
+      color:var(--text);
+    }
+
+    textarea{
+      min-height:130px;
+      resize:vertical;
+    }
+
+    .hidden{display:none!important}
+
+    .status-box{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid #dfe8ec;
+      background:#fafcfd;
+      display:grid;
+      gap:8px;
+      color:#334155;
+    }
+
+    .detected-box{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:#f4f8fb;
+      border:1px solid #dce7ed;
+      color:#24324a;
+      font-weight:700;
+    }
+
+    .result-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:16px;
+      margin-top:20px;
+    }
+
+    .tri-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .result-box{
+      white-space:pre-wrap;
+      border:1px solid #dde7eb;
+      border-radius:18px;
+      background:#fbfdfe;
+      padding:14px;
+      min-height:110px;
+      line-height:1.5;
+    }
+
+    .result-box ul{
+      margin:0;
+      padding-left:18px;
+    }
+
+    .collapsible{
+      margin-top:14px;
+    }
+
+    details{
+      border:1px solid #dde7eb;
+      border-radius:16px;
+      background:#fbfdfe;
+      padding:12px 14px;
+    }
+
+    details summary{
+      cursor:pointer;
+      font-weight:700;
+      color:#203047;
+      outline:none;
+    }
+
+    .history-list,.med-list,.appt-list{
+      display:grid;
+      gap:14px;
+      margin-top:12px;
+    }
+
+    .history-item,.appt-item,.med-item{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#fbfcfd;
+      padding:16px;
+    }
+
+    .item-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .timeline{
+      display:grid;
+      gap:14px;
+    }
+
+    .timeline-entry{
+      border-left:4px solid var(--brand);
+      padding-left:12px;
+      margin-left:6px;
+    }
+
+    .nav-bottom{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      height:var(--nav-h);
+      background:#fff;
+      border-top:1px solid #dce6ea;
+      display:flex;
+      justify-content:center;
+      z-index:30;
+      box-shadow:0 -8px 24px rgba(16,24,40,.05);
+    }
+
+    .nav-inner{
+      width:min(1024px,100%);
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+      padding:10px 18px;
+    }
+
+    .nav-btn{
+      border:none;
+      background:transparent;
+      border-radius:18px;
+      color:#3f4a5b;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .nav-btn.active{
+      background:#eaf8f7;
+      color:#162033;
+      border:1px solid #ccecea;
+    }
+
+    .nav-icon{
+      font-size:22px;
+      line-height:1;
+    }
+
+    .section-title{
+      font-size:26px;
+      font-weight:800;
+      margin:20px 0 14px;
+      color:#162033;
+    }
+
+    .profile-box{
+      display:grid;
+      gap:12px;
+      max-width:620px;
+    }
+
+    .empty{
+      color:#687588;
+      font-size:15px;
+    }
+
+    .success-note{
+      color:var(--success);
+      font-weight:700;
+    }
+
+    .danger-note{
+      color:var(--danger);
+      font-weight:700;
+    }
+
+    @media (max-width: 940px){
+      .grid-main,
+      .result-grid,
+      .tri-grid,
+      .mini-grid,
+      .stat-row{
+        grid-template-columns:1fr;
+      }
+
+      .hero-actions{
+        flex-direction:column;
+      }
+
+      .recent-item{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .topbar{
+        height:68px;
+        font-size:17px;
+        padding:0 12px;
+        text-align:center;
+      }
+
+      .nav-inner{
+        gap:6px;
+        padding:10px 10px;
+      }
+
+      .nav-btn{
+        font-size:12px;
+      }
+
+      .brand-title{
+        font-size:18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">Zdravie Zálohované – Zdravie-UX</div>
+
+  <div class="app-header">
+    <div class="brand-row">
+      <div class="brand-badge">ZZ</div>
+      <div>
+        <h1 class="brand-title" id="appTitle">Zdravie Zálohované</h1>
+        <p class="brand-sub" id="appSubtitle">AI zdravotný archív vo vašom zariadení</p>
+      </div>
+    </div>
+  </div>
+
+  <main class="shell">
+    <!-- DOMOV -->
+    <section id="tab-home" class="tab-section active">
+      <div class="grid-main">
+        <div class="stack">
+          <div class="card">
+            <h2 id="heroTitle">Jedno miesto pre správy, lieky a termíny</h2>
+            <p class="lead" id="heroLead">
+              Táto aplikácia nenahrádza lekára. Slúži na organizáciu vašich lekárskych správ a lepšie porozumenie textu.
+            </p>
+            <p class="muted" id="heroSub">AI správa automaticky prečíta, jednoducho vysvetlí a uloží.</p>
+
+            <div class="field" style="max-width:420px;margin-top:14px;">
+              <label for="profileName" id="labelProfileName">Meno osoby</label>
+              <input type="text" id="profileName" placeholder="Zadajte meno osoby" />
+            </div>
+
+            <div class="hero-actions">
+              <label class="btn-like primary" style="display:inline-flex;align-items:center;justify-content:center;">
+                <span id="uploadBtnText">＋ Nahrať správu</span>
+                <input type="file" id="imageInput" accept=".png,.jpg,.jpeg,.heic,image/*" multiple hidden />
+              </label>
+
+              <button class="secondary" onclick="showTab('reports')" id="historyBtnTop">Správy</button>
+              <button class="secondary" onclick="showTab('calendar')" id="calendarBtnTop">Kalendár</button>
+            </div>
+
+            <div class="muted small" id="selectedFileName">Žiadna správa nie je nahraná</div>
+
+            <div id="detectedMeta" class="detected-box hidden">Rozpoznané: —</div>
+
+            <div id="processStatus" class="status-box hidden">
+              <div id="statusUpload">✅ Správa nahraná</div>
+              <div id="statusOcr">⏳ Čítam správu...</div>
+              <div id="statusAi">⏳ Pripravujem vysvetlenie...</div>
+              <div id="statusSave">⏳ Ukladám správu...</div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-box">
+                <div class="stat-number" id="countReports">0</div>
+                <div class="muted" id="countReportsLabel">správ</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-number" id="countMeds">0</div>
+                <div class="muted" id="countMedsLabel">lieky</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-number" id="countAppointments">0</div>
+                <div class="muted" id="countAppointmentsLabel">termíny</div>
+              </div>
+            </div>
+
+            <div class="list-head">
+              <h3 id="recentTitle">Posledné položky</h3>
+              <div class="muted small" id="recentUpdated">Aktualizované: —</div>
+            </div>
+
+            <div class="recent-list" id="recentReportsList">
+              <div class="empty">Zatiaľ nie sú uložené žiadne správy.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="card">
+            <h2 id="safeTitle">Bezpečnosť</h2>
+            <div class="safety-box" id="safeBoxText">
+              ✅ Vaše dáta sa ukladajú lokálne v tomto zariadení.<br>
+              ✅ Žiadny server neukladá vaše správy.<br>
+              ✅ Export a zálohu spravujete vy.
+            </div>
+
+            <div class="warning-box" id="warningBoxText">
+              ⚠️ AI vysvetlenie je pomocné vysvetlenie. Nenahrádza odbornú konzultáciu.
+            </div>
+
+            <div style="margin-top:14px;">
+              <button class="light" onclick="toggleHowItWorks()" id="howItWorksBtn">Ako to funguje</button>
+            </div>
+
+            <div id="howItWorksBox" class="result-box hidden" style="margin-top:12px;">
+              1. Nahráte správu.<br>
+              2. Aplikácia ju prečíta pomocou OCR.<br>
+              3. AI pripraví jednoduché vysvetlenie, laboratórne zhrnutie a lieky.<br>
+              4. Správa sa uloží do histórie.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini-grid">
+        <div class="mini-card">
+          <h3>Moje správy</h3>
+          <div class="muted">Pridať fotku/PDF, pozrieť prepis a laické vysvetlenie.</div>
+        </div>
+
+        <div class="mini-card">
+          <h3>Moje lieky</h3>
+          <div class="muted">Zoznam liekov, dávkovanie a história užívania.</div>
+        </div>
+
+        <div class="mini-card">
+          <h3>Kalendár</h3>
+          <div class="muted">Kontroly a vyšetrenia s pripomienkami.</div>
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <div class="card">
+          <h2>Zrozumiteľné vysvetlenie</h2>
+          <div id="summaryBox" class="result-box">-</div>
+        </div>
+
+        <div class="card">
+          <h2>Meta údaje</h2>
+          <div id="metaBox" class="result-box small">-</div>
+        </div>
+      </div>
+
+      <div class="tri-grid">
+        <div class="card">
+          <h2>Laboratórne výsledky</h2>
+          <div id="labsBox" class="result-box">-</div>
+        </div>
+
+        <div class="card">
+          <h2>Lieky</h2>
+          <div id="medicationsBox" class="result-box">-</div>
+        </div>
+
+        <div class="card">
+          <h2>Odporúčania</h2>
+          <div id="recommendationsBox" class="result-box">-</div>
+        </div>
+      </div>
+
+      <div class="tri-grid">
+        <div class="card">
+          <h2>Diagnózy</h2>
+          <div id="diagnosesBox" class="result-box">-</div>
+        </div>
+
+        <div class="card">
+          <h2>Riziká / Red flags</h2>
+          <div id="redFlagsBox" class="result-box">-</div>
+        </div>
+
+        <div class="card">
+          <h2>Otázky pre lekára</h2>
+          <div id="questionsBox" class="result-box">-</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Časová os pacienta</h2>
+        <div id="timelineList" class="timeline">
+          <div class="empty">Zatiaľ nie sú uložené žiadne udalosti.</div>
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <details>
+          <summary>Surový OCR text a technický detail</summary>
+          <div style="margin-top:12px">
+            <div class="field">
+              <label for="output">Prečítaný text (OCR)</label>
+              <textarea id="output" placeholder="Tu sa zobrazí text správy po OCR..."></textarea>
+            </div>
+            <div class="field">
+              <label for="analysis">Textový AI prehľad</label>
+              <textarea id="analysis" placeholder="Tu sa zobrazí textový prehľad AI..."></textarea>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- SPRÁVY -->
+    <section id="tab-reports" class="tab-section">
+      <h2 class="section-title">Moje správy</h2>
+      <div class="card">
+        <div class="hero-actions" style="margin-top:0">
+          <label class="btn-like primary" style="display:inline-flex;align-items:center;justify-content:center;">
+            <span>＋ Nahrať správu</span>
+            <input type="file" id="imageInputSecondary" accept=".png,.jpg,.jpeg,.heic,image/*" multiple hidden />
+          </label>
+          <button class="light" onclick="showTab('home')">Späť na domov</button>
+          <button class="light" onclick="clearAllData()">Vymazať všetky údaje</button>
+        </div>
+        <div id="history" class="history-list"></div>
+      </div>
+    </section>
+
+    <!-- LIEKY -->
+    <section id="tab-meds" class="tab-section">
+      <h2 class="section-title">Moje lieky</h2>
+      <div class="card">
+        <p class="lead">Lieky sa zobrazujú automaticky zo spracovaných správ.</p>
+        <div id="medsOverview" class="med-list"></div>
+      </div>
+    </section>
+
+    <!-- KALENDÁR -->
+    <section id="tab-calendar" class="tab-section">
+      <h2 class="section-title">Kalendár návštev</h2>
+      <div class="card">
+        <p class="lead">
+          Správy, návštevy a história sa ukladajú lokálne vo vašom zariadení. Pri použití AI vysvetlenia sa text správy odošle na spracovanie AI modelu.
+        </p>
+
+        <div class="tri-grid">
+          <div class="field">
+            <label for="appointmentDate">Dátum návštevy</label>
+            <input type="date" id="appointmentDate" />
+          </div>
+
+          <div class="field">
+            <label for="appointmentTime">Čas návštevy</label>
+            <input type="time" id="appointmentTime" />
+          </div>
+
+          <div class="field">
+            <label for="appointmentSpecialty">Špecializácia</label>
+            <select id="appointmentSpecialty">
+              <option value="">-- vyber --</option>
+              <option value="všeobecný lekár">Všeobecný lekár</option>
+              <option value="pediatria">Pediatria</option>
+              <option value="gynekológia">Gynekológia</option>
+              <option value="urológia">Urológia</option>
+              <option value="interna">Interna</option>
+              <option value="endokrinológia">Endokrinológia</option>
+              <option value="neurológia">Neurológia</option>
+              <option value="kardiológia">Kardiológia</option>
+              <option value="ortopédia">Ortopédia</option>
+              <option value="dermatológia">Dermatológia</option>
+              <option value="gastroenterológia">Gastroenterológia</option>
+              <option value="oftalmológia">Oftalmológia</option>
+              <option value="ORL">ORL</option>
+              <option value="psychiatria">Psychiatria</option>
+              <option value="psychológia">Psychológia</option>
+              <option value="chirurgia">Chirurgia</option>
+              <option value="rehabilitácia">Rehabilitácia</option>
+              <option value="hematológia">Hematológia</option>
+              <option value="onkológia">Onkológia</option>
+              <option value="iné">Iné</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tri-grid">
+          <div class="field">
+            <label for="appointmentDoctor">Lekár</label>
+            <input type="text" id="appointmentDoctor" placeholder="napr. MUDr. Nováková" />
+          </div>
+
+          <div class="field">
+            <label for="appointmentLocation">Miesto</label>
+            <input type="text" id="appointmentLocation" placeholder="napr. NÚSCH Bratislava" />
+          </div>
+
+          <div class="field">
+            <label for="appointmentNote">Poznámka</label>
+            <input type="text" id="appointmentNote" placeholder="napr. kontrola CT, odbery krvi..." />
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button class="primary" onclick="saveAppointment()">Uložiť návštevu</button>
+          <button class="light" onclick="loadAppointments()">Zobraziť návštevy</button>
+        </div>
+
+        <div class="result-grid" style="margin-top:14px">
+          <div class="card" style="padding:16px">
+            <h3>Upozornenia</h3>
+            <div id="appointmentAlerts" class="result-box">Zatiaľ bez upozornení.</div>
+          </div>
+          <div class="card" style="padding:16px">
+            <h3>Najbližšie návštevy</h3>
+            <div id="upcomingAppointments" class="result-box">Zatiaľ nie sú naplánované žiadne budúce návštevy.</div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:16px;margin-top:14px">
+          <h3>Minulé návštevy</h3>
+          <div id="pastAppointments" class="result-box">Zatiaľ nie sú evidované žiadne minulé návštevy.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFIL -->
+    <section id="tab-profile" class="tab-section">
+      <h2 class="section-title">Profil</h2>
+      <div class="card">
+        <div class="profile-box">
+          <div class="field">
+            <label for="profileNameProfile">Meno osoby</label>
+            <input type="text" id="profileNameProfile" placeholder="Zadajte meno osoby" />
+          </div>
+
+          <div class="field">
+            <label>Jazyk aplikácie</label>
+            <select id="languageSelect" onchange="setLanguage(this.value)">
+              <option value="sk">Slovenčina</option>
+              <option value="cz">Čeština (neskôr)</option>
+              <option value="en">English (later)</option>
+              <option value="de">Deutsch (später)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>O aplikácii</label>
+            <div class="result-box">
+              Zdravie-UX je osobný zdravotný archív s AI vysvetlením správ, laboratórnych výsledkov a liekov.
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <button class="light" onclick="syncProfileName()">Uložiť meno</button>
+            <button class="light" onclick="clearAllData()">Vymazať všetky údaje</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav-bottom">
+    <div class="nav-inner">
+      <button class="nav-btn active" data-tab="home" onclick="showTab('home')">
+        <span class="nav-icon">⌂</span>
+        <span>Domov</span>
+      </button>
+      <button class="nav-btn" data-tab="reports" onclick="showTab('reports')">
+        <span class="nav-icon">🧾</span>
+        <span>Správy</span>
+      </button>
+      <button class="nav-btn" data-tab="meds" onclick="showTab('meds')">
+        <span class="nav-icon">💊</span>
+        <span>Lieky</span>
+      </button>
+      <button class="nav-btn" data-tab="calendar" onclick="showTab('calendar')">
+        <span class="nav-icon">🗓️</span>
+        <span>Kalendár</span>
+      </button>
+      <button class="nav-btn" data-tab="profile" onclick="showTab('profile')">
+        <span class="nav-icon">⚙️</span>
+        <span>Profil</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    const AI_ENDPOINT = "https://health-ai-backend-b35i.onrender.com/analyze";
+    const APP_LANG_KEY = "zz_app_lang";
+    window.lastStructuredAnalysis = null;
+
+    const TEXTS = {
+      sk: {
+        appTitle: "Zdravie Zálohované",
+        appSubtitle: "AI zdravotný archív vo vašom zariadení"
+      },
+      cz: {},
+      en: {},
+      de: {}
+    };
+
+    function safeText(value) {
+      return value && String(value).trim() ? String(value) : "-";
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function setHTML(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = value;
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatDateSK(dateString) {
+      if (!dateString) return "-";
+      try {
+        return new Date(dateString).toLocaleString("sk-SK");
+      } catch {
+        return dateString;
+      }
+    }
+
+    function showTab(tab) {
+      document.querySelectorAll(".tab-section").forEach(el => el.classList.remove("active"));
+      const section = document.getElementById(`tab-${tab}`);
+      if (section) section.classList.add("active");
+
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tab);
+      });
+
+      if (tab === "reports") loadReports();
+      if (tab === "meds") renderMedicationsOverview();
+      if (tab === "calendar") loadAppointments();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleHowItWorks() {
+      const box = document.getElementById("howItWorksBox");
+      if (box) box.classList.toggle("hidden");
+    }
+
+    function setLanguage(lang) {
+      localStorage.setItem(APP_LANG_KEY, lang);
+      const t = TEXTS[lang] || TEXTS.sk;
+      setText("appTitle", t.appTitle || TEXTS.sk.appTitle);
+      setText("appSubtitle", t.appSubtitle || TEXTS.sk.appSubtitle);
+    }
+
+    function loadLanguage() {
+      const lang = localStorage.getItem(APP_LANG_KEY) || "sk";
+      const select = document.getElementById("languageSelect");
+      if (select) select.value = lang;
+      setLanguage(lang);
+    }
+
+    function syncProfileName() {
+      const profileEl = document.getElementById("profileName");
+      const profileProfileEl = document.getElementById("profileNameProfile");
+      const value = profileProfileEl?.value?.trim() || "";
+      if (profileEl) profileEl.value = value;
+      localStorage.setItem("zz_profile_name", value);
+      alert("Meno bolo uložené.");
+    }
+
+    function loadProfileName() {
+      const value = localStorage.getItem("zz_profile_name") || "";
+      const a = document.getElementById("profileName");
+      const b = document.getElementById("profileNameProfile");
+      if (a) a.value = value;
+      if (b) b.value = value;
+    }
+
+    function updateStatus(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function showProcessStatus() {
+      const box = document.getElementById("processStatus");
+      if (box) box.classList.remove("hidden");
+    }
+
+    function resetProcessStatus() {
+      updateStatus("statusUpload", "✅ Správa nahraná");
+      updateStatus("statusOcr", "⏳ Čítam správu...");
+      updateStatus("statusAi", "⏳ Pripravujem vysvetlenie...");
+      updateStatus("statusSave", "⏳ Ukladám správu...");
+    }
+
+    function showDetectedMetaFromAnalysis() {
+      const meta = document.getElementById("detectedMeta");
+      const result = window.lastStructuredAnalysis;
+      if (!meta || !result) return;
+      const specialty = result.specialty || "neurčené";
+      const documentType = result.document_type || "neurčené";
+      meta.classList.remove("hidden");
+      meta.textContent = `Rozpoznané: ${documentType} · ${specialty}`;
+    }
+
+    function getAllReports() {
+      const reports = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key.startsWith("report_")) continue;
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        try {
+          reports.push({ key, data: JSON.parse(raw) });
+        } catch (e) {
+          console.error("Chyba pri čítaní reportu:", e);
+        }
+      }
+      reports.sort((a,b)=> new Date(b.data.date) - new Date(a.data.date));
+      return reports;
+    }
+
+    function getAllAppointments() {
+      const appointments = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key.startsWith("appointment_")) continue;
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        try {
+          appointments.push(JSON.parse(raw));
+        } catch (e) {
+          console.error("Chyba pri čítaní appointmentu:", e);
+        }
+      }
+      appointments.sort((a,b)=> new Date(`${a.date}T${a.time || "00:00"}`) - new Date(`${b.date}T${b.time || "00:00"}`));
+      return appointments;
+    }
+
+    function getAllMedicationsFromReports() {
+      const medsMap = new Map();
+      getAllReports().forEach(({ data }) => {
+        const meds = data?.structured?.medications || [];
+        meds.forEach(m => {
+          const key = `${m.name || ""}|${m.dose || ""}|${m.schedule || ""}`;
+          if (!m.name) return;
+          if (!medsMap.has(key)) medsMap.set(key, m);
+        });
+      });
+      return Array.from(medsMap.values());
+    }
+
+    function renderCounts() {
+      setText("countReports", getAllReports().length);
+      setText("countAppointments", getAllAppointments().length);
+      setText("countMeds", getAllMedicationsFromReports().length);
+    }
+
+    function renderRecentReports() {
+      const list = document.getElementById("recentReportsList");
+      if (!list) return;
+
+      const reports = getAllReports().slice(0, 3);
+      setText("recentUpdated", "Aktualizované: " + new Date().toLocaleString("sk-SK"));
+
+      if (!reports.length) {
+        list.innerHTML = `<div class="empty">Zatiaľ nie sú uložené žiadne správy.</div>`;
+        return;
+      }
+
+      list.innerHTML = reports.map(({ key, data }) => `
+        <div class="recent-item">
+          <div>
+            <div style="font-weight:800;font-size:18px">${escapeHtml(data.documentType || data.structured?.document_type || "lekárska správa")}</div>
+            <div class="muted">${escapeHtml(data.specialty || data.structured?.specialty || "Nezaradené")} • ${formatDateSK(data.date)}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="pill">správa</span>
+            <button class="light" onclick="openSavedReport('${key}')">Otvoriť</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderTimeline() {
+      const timelineDiv = document.getElementById("timelineList");
+      if (!timelineDiv) return;
+
+      const events = [];
+      getAllReports().forEach(({ data }) => {
+        const event = data?.structured?.timeline_event;
+        events.push({
+          date: event?.date || data.date || "",
+          title: event?.title || data.documentType || "Zdravotná udalosť",
+          summary: event?.summary || data?.structured?.summary_plain || "",
+          specialty: data.specialty || data?.structured?.specialty || ""
+        });
+      });
+
+      events.sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+      if (!events.length) {
+        timelineDiv.innerHTML = `<div class="empty">Zatiaľ nie sú uložené žiadne udalosti.</div>`;
+        return;
+      }
+
+      timelineDiv.innerHTML = events.map(e => `
+        <div class="timeline-entry">
+          <div><b>${escapeHtml(e.date || "-")}</b></div>
+          <div style="margin-top:6px;font-weight:800">${escapeHtml(e.title || "-")}</div>
+          <div class="small muted">${escapeHtml(e.specialty || "")}</div>
+          <div style="margin-top:6px">${escapeHtml(e.summary || "-")}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderStructuredResult(result) {
+      setText("summaryBox", result?.summary_plain || "-");
+
+      setHTML("metaBox", `
+        <b>Špecializácia:</b> ${escapeHtml(safeText(result?.specialty))}<br>
+        <b>Typ dokumentu:</b> ${escapeHtml(safeText(result?.document_type))}<br>
+        <b>Dátum správy:</b> ${escapeHtml(safeText(result?.document_date))}<br>
+        <b>Lekár:</b> ${escapeHtml(safeText(result?.doctor))}<br>
+        <b>Pracovisko:</b> ${escapeHtml(safeText(result?.facility))}
+      `);
+
+      setHTML(
+        "diagnosesBox",
+        (result?.diagnoses?.length)
+          ? `<ul>${result.diagnoses.map(d =>
+              `<li>${escapeHtml((d.code ? d.code + " " : "") + (d.name || ""))}</li>`
+            ).join("")}</ul>`
+          : "-"
+      );
+
+      setHTML(
+        "medicationsBox",
+        (result?.medications?.length)
+          ? `<ul>${result.medications.map(m =>
+              `<li><b>${escapeHtml(safeText(m.name))}</b><br>Dávka: ${escapeHtml(safeText(m.dose))}<br>Schéma: ${escapeHtml(safeText(m.schedule))}<br>Dôvod: ${escapeHtml(safeText(m.reason))}</li>`
+            ).join("")}</ul>`
+          : "-"
+      );
+
+      setHTML(
+        "labsBox",
+        (result?.lab_results?.length)
+          ? `<ul>${result.lab_results.map(l =>
+              `<li><b>${escapeHtml(safeText(l.name))}:</b> ${escapeHtml(safeText(l.value))} (${escapeHtml(safeText(l.status))})<br>${escapeHtml(safeText(l.meaning))}</li>`
+            ).join("")}</ul>`
+          : "-"
+      );
+
+      setHTML(
+        "recommendationsBox",
+        (result?.recommendations?.length)
+          ? `<ul>${result.recommendations.map(r => `<li>${escapeHtml(r)}</li>`).join("")}</ul>`
+          : "-"
+      );
+
+      setHTML(
+        "redFlagsBox",
+        (result?.red_flags?.length)
+          ? `<ul>${result.red_flags.map(r => `<li>${escapeHtml(r)}</li>`).join("")}</ul>`
+          : "-"
+      );
+
+      setHTML(
+        "questionsBox",
+        (result?.questions_for_doctor?.length)
+          ? `<ul>${result.questions_for_doctor.map(q => `<li>${escapeHtml(q)}</li>`).join("")}</ul>`
+          : "-"
+      );
+    }
+
+    async function readText(files) {
+      if (!files?.length) {
+        alert("Vyber aspoň jednu fotku správy");
+        return "";
+      }
+
+      const output = document.getElementById("output");
+      if (output) output.value = "Prebieha OCR čítanie... chvíľu počkaj.";
+
+      let combinedText = "";
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        if (output) {
+          output.value = `Prebieha OCR čítanie strany ${i + 1} z ${files.length}...`;
+        }
+
+        const pageText = await new Promise((resolve, reject) => {
+          try {
+            const imageUrl = URL.createObjectURL(file);
+            const img = new Image();
+
+            img.onload = async function () {
+              try {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+
+                canvas.width = img.naturalWidth || img.width;
+                canvas.height = img.naturalHeight || img.height;
+                ctx.drawImage(img, 0, 0);
+
+                const pngDataUrl = canvas.toDataURL("image/png");
+                const result = await Tesseract.recognize(pngDataUrl, "slk+eng", {
+                  logger: m => console.log(`OCR strana ${i + 1}:`, m)
+                });
+
+                URL.revokeObjectURL(imageUrl);
+                resolve(result.data.text || "");
+              } catch (error) {
+                reject(error);
+              }
+            };
+
+            img.onerror = function () {
+              reject(new Error(`Nepodarilo sa načítať obrázok strany ${i + 1}`));
+            };
+
+            img.src = imageUrl;
+          } catch (error) {
+            reject(error);
+          }
+        });
+
+        combinedText += `\n\n--- STRANA ${i + 1} ---\n\n${pageText}`;
+      }
+
+      combinedText = combinedText.trim();
+      if (output) output.value = combinedText || "Nepodarilo sa rozpoznať text.";
+      return combinedText;
+    }
+
+    async function analyzeText() {
+      const text = document.getElementById("output")?.value || "";
+      if (!text.trim() || text.includes("Prebieha OCR")) {
+        throw new Error("Text správy ešte nie je pripravený pre AI analýzu.");
+      }
+
+      const analysis = document.getElementById("analysis");
+      if (analysis) analysis.value = "Prebieha AI analýza...";
+
+      const specialty = "";
+      const documentType = "";
+
+      try {
+        const response = await fetch(AI_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text, specialty, documentType })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.result || "Neznáma chyba servera");
+        }
+
+        const result = data.result;
+        window.lastStructuredAnalysis = result;
+
+        const diagnosesText = (result.diagnoses || []).length
+          ? result.diagnoses.map(d => `- ${d.code ? d.code + " " : ""}${d.name || ""}`.trim()).join("\n")
+          : "-";
+
+        const medsText = (result.medications || []).length
+          ? result.medications.map(m =>
+              `- ${m.name || "-"}, ${m.dose || "-"}, ${m.schedule || "-"}, dôvod: ${m.reason || "-"}`
+            ).join("\n")
+          : "-";
+
+        const labsText = (result.lab_results || []).length
+          ? result.lab_results.map(l =>
+              `- ${l.name || "-"}: ${l.value || "-"} (${l.status || "-"}) – ${l.meaning || "-"}`
+            ).join("\n")
+          : "-";
+
+        const recommendationsText = (result.recommendations || []).length
+          ? result.recommendations.map(r => `- ${r}`).join("\n")
+          : "-";
+
+        const redFlagsText = (result.red_flags || []).length
+          ? result.red_flags.map(r => `- ${r}`).join("\n")
+          : "-";
+
+        const questionsText = (result.questions_for_doctor || []).length
+          ? result.questions_for_doctor.map(q => `- ${q}`).join("\n")
+          : "-";
+
+        const prettyText = `
+ZROZUMITEĽNÉ VYSVETLENIE:
+${result.summary_plain || "-"}
+
+ŠPECIALIZÁCIA:
+${result.specialty || "-"}
+
+TYP DOKUMENTU:
+${result.document_type || "-"}
+
+DÁTUM SPRÁVY:
+${result.document_date || "-"}
+
+LEKÁR:
+${result.doctor || "-"}
+
+PRACOVISKO:
+${result.facility || "-"}
+
+DIAGNÓZY:
+${diagnosesText}
+
+LIEKY:
+${medsText}
+
+LABORATÓRNE UPOZORNENIA:
+${labsText}
+
+ODPORÚČANIA:
+${recommendationsText}
+
+RIZIKÁ / RED FLAGS:
+${redFlagsText}
+
+OTÁZKY PRE LEKÁRA:
+${questionsText}
+
+ČASOVÁ OS – TÁTO UDALOSŤ:
+${result.timeline_event
+  ? `- ${result.timeline_event.date || "-"} | ${result.timeline_event.title || "-"} | ${result.timeline_event.summary || "-"}`
+  : "-"}
+`.trim();
+
+        if (analysis) {
+          analysis.value = prettyText;
+          analysis.dispatchEvent(new Event("input"));
+        }
+
+        renderStructuredResult(result);
+        showDetectedMetaFromAnalysis();
+      } catch (error) {
+        console.error("Chyba pri AI analýze:", error);
+        if (analysis) analysis.value = "AI analýza zlyhala: " + error.message;
+        throw error;
+      }
+    }
+
+    function saveReport() {
+      const name = document.getElementById("profileName")?.value?.trim() || "";
+      const report = document.getElementById("output")?.value || "";
+      const explanation = document.getElementById("analysis")?.value || "";
+
+      if (!report.trim()) {
+        alert("Najprv načítaj lekársku správu.");
+        return;
+      }
+
+      const data = {
+        name,
+        specialty: window.lastStructuredAnalysis?.specialty || "",
+        documentType: window.lastStructuredAnalysis?.document_type || "",
+        report,
+        explanation,
+        structured: window.lastStructuredAnalysis || null,
+        date: new Date().toISOString()
+      };
+
+      localStorage.setItem("report_" + Date.now(), JSON.stringify(data));
+      renderAll();
+    }
+
+    function openSavedReport(key) {
+      const raw = localStorage.getItem(key);
+      if (!raw) return;
+
+      try {
+        const data = JSON.parse(raw);
+
+        const outputEl = document.getElementById("output");
+        const analysisEl = document.getElementById("analysis");
+        const profileNameEl = document.getElementById("profileName");
+        const profileNameProfileEl = document.getElementById("profileNameProfile");
+
+        if (outputEl) outputEl.value = data.report || "";
+        if (analysisEl) analysisEl.value = data.explanation || "";
+        if (profileNameEl) profileNameEl.value = data.name || "";
+        if (profileNameProfileEl) profileNameProfileEl.value = data.name || "";
+
+        window.lastStructuredAnalysis = data.structured || null;
+
+        if (data.structured) {
+          renderStructuredResult(data.structured);
+          showDetectedMetaFromAnalysis();
+        }
+
+        showTab("home");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch (e) {
+        console.error("Chyba pri otvorení správy:", e);
+        alert("Správu sa nepodarilo otvoriť.");
+      }
+    }
+
+    function deleteSavedReport(key) {
+      if (!confirm("Naozaj chcete vymazať túto správu?")) return;
+      localStorage.removeItem(key);
+      renderAll();
+    }
+
+    function clearAllData() {
+      if (!confirm("Naozaj chcete vymazať všetky uložené údaje?")) return;
+      localStorage.clear();
+      window.lastStructuredAnalysis = null;
+      location.reload();
+    }
+
+    function loadReports() {
+      const historyDiv = document.getElementById("history");
+      if (!historyDiv) return;
+
+      const reports = getAllReports();
+
+      if (!reports.length) {
+        historyDiv.innerHTML = `<div class="empty">Zatiaľ nie sú uložené žiadne správy.</div>`;
+        return;
+      }
+
+      historyDiv.innerHTML = reports.map(({ key, data }) => {
+        const timelineLine = data.structured?.timeline_event
+          ? `${data.structured.timeline_event.date || "-"} | ${data.structured.timeline_event.title || "-"}`
+          : "-";
+
+        const shortReport = (data.report || "").length > 340
+          ? (data.report || "").substring(0, 340) + "..."
+          : (data.report || "");
+
+        return `
+          <div class="history-item">
+            <div><b>Meno:</b> ${escapeHtml(data.name || "-")}</div>
+            <div><b>Špecializácia:</b> ${escapeHtml(data.specialty || "-")}</div>
+            <div><b>Typ dokumentu:</b> ${escapeHtml(data.documentType || "-")}</div>
+            <div><b>Dátum uloženia:</b> ${escapeHtml(formatDateSK(data.date))}</div>
+            <div><b>Časová udalosť:</b> ${escapeHtml(timelineLine)}</div>
+
+            <div class="result-box" style="margin-top:10px">${escapeHtml(shortReport || "-")}</div>
+
+            <div class="item-actions">
+              <button class="primary" onclick="openSavedReport('${key}')">Otvoriť</button>
+              <button class="danger" onclick="deleteSavedReport('${key}')">Vymazať</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderMedicationsOverview() {
+      const box = document.getElementById("medsOverview");
+      if (!box) return;
+
+      const meds = getAllMedicationsFromReports();
+      if (!meds.length) {
+        box.innerHTML = `<div class="empty">Zatiaľ neboli rozpoznané žiadne lieky.</div>`;
+        return;
+      }
+
+      box.innerHTML = meds.map(m => `
+        <div class="med-item">
+          <div style="font-weight:800;font-size:18px">${escapeHtml(safeText(m.name))}</div>
+          <div class="muted" style="margin-top:6px">Dávka: ${escapeHtml(safeText(m.dose))}</div>
+          <div class="muted">Schéma: ${escapeHtml(safeText(m.schedule))}</div>
+          <div class="muted">Dôvod: ${escapeHtml(safeText(m.reason))}</div>
+        </div>
+      `).join("");
+    }
+
+    function saveAppointment() {
+      const name = document.getElementById("profileName")?.value?.trim() || "";
+      const date = document.getElementById("appointmentDate")?.value || "";
+      const time = document.getElementById("appointmentTime")?.value || "";
+      const specialty = document.getElementById("appointmentSpecialty")?.value || "";
+      const doctor = document.getElementById("appointmentDoctor")?.value || "";
+      const location = document.getElementById("appointmentLocation")?.value || "";
+      const note = document.getElementById("appointmentNote")?.value || "";
+
+      if (!date) {
+        alert("Zadaj dátum návštevy.");
+        return;
+      }
+
+      const appointment = {
+        name, date, time, specialty, doctor, location, note,
+        createdAt: new Date().toISOString()
+      };
+
+      localStorage.setItem("appointment_" + Date.now(), JSON.stringify(appointment));
+      loadAppointments();
+      renderCounts();
+      alert("Návšteva bola uložená.");
+    }
+
+    function loadAppointments() {
+      const upcomingDiv = document.getElementById("upcomingAppointments");
+      const pastDiv = document.getElementById("pastAppointments");
+      const alertsDiv = document.getElementById("appointmentAlerts");
+      if (!upcomingDiv || !pastDiv || !alertsDiv) return;
+
+      const appointments = getAllAppointments();
+      const now = new Date();
+      const todayStr = now.toISOString().slice(0, 10);
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+
+      const upcoming = [];
+      const past = [];
+      const alerts = [];
+
+      appointments.forEach(a => {
+        const dateTime = new Date(`${a.date}T${a.time || "00:00"}`);
+        const isPast = dateTime < now;
+
+        const itemHtml = `
+          <div class="appt-item">
+            <div><b>${escapeHtml(a.date)}</b>${a.time ? ` o ${escapeHtml(a.time)}` : ""}</div>
+            <div style="margin-top:6px;font-weight:800">${escapeHtml(a.specialty || "Návšteva")}</div>
+            <div class="muted small" style="margin-top:6px;">
+              ${escapeHtml(a.doctor || "-")}${a.location ? ` • ${escapeHtml(a.location)}` : ""}
+            </div>
+            <div style="margin-top:6px">${escapeHtml(a.note || "-")}</div>
+            <div class="small muted" style="margin-top:6px">
+              ${escapeHtml(a.name || "-")}
+            </div>
+          </div>
+        `;
+
+        if (isPast) past.push(itemHtml);
+        else upcoming.push(itemHtml);
+
+        if (a.date === todayStr) {
+          alerts.push(`Dnes máte návštevu: ${a.specialty || "návšteva"}${a.time ? ` o ${a.time}` : ""}${a.doctor ? ` (${a.doctor})` : ""}.`);
+        }
+
+        if (a.date === tomorrowStr) {
+          alerts.push(`Zajtra máte návštevu: ${a.specialty || "návšteva"}${a.time ? ` o ${a.time}` : ""}${a.doctor ? ` (${a.doctor})` : ""}.`);
+        }
+      });
+
+      upcomingDiv.innerHTML = upcoming.length ? upcoming.join("") : "Zatiaľ nie sú naplánované žiadne budúce návštevy.";
+      pastDiv.innerHTML = past.length ? past.reverse().join("") : "Zatiaľ nie sú evidované žiadne minulé návštevy.";
+      alertsDiv.innerHTML = alerts.length ? `<ul>${alerts.map(a => `<li>${escapeHtml(a)}</li>`).join("")}</ul>` : "Zatiaľ bez upozornení.";
+    }
+
+    async function handleFiles(files) {
+      if (!files?.length) return;
+
+      const selectedFileNameEl = document.getElementById("selectedFileName");
+      if (files.length === 1) selectedFileNameEl.textContent = files[0].name;
+      else selectedFileNameEl.textContent = `Vybraných strán: ${files.length}`;
+
+      try {
+        showProcessStatus();
+        resetProcessStatus();
+
+        updateStatus("statusUpload", "✅ Správa nahraná");
+        updateStatus("statusOcr", "⏳ Čítam správu...");
+        updateStatus("statusAi", "⏳ Čaká na AI vysvetlenie...");
+        updateStatus("statusSave", "⏳ Čaká na uloženie...");
+
+        await readText(files);
+        updateStatus("statusOcr", "✅ Správa prečítaná");
+
+        updateStatus("statusAi", "⏳ Pripravujem vysvetlenie...");
+        await analyzeText();
+        updateStatus("statusAi", "✅ Vysvetlenie pripravené");
+
+        updateStatus("statusSave", "⏳ Ukladám správu...");
+        saveReport();
+        updateStatus("statusSave", "✅ Správa uložená");
+
+        renderAll();
+        showTab("home");
+      } catch (error) {
+        console.error("Automatický flow zlyhal:", error);
+        updateStatus("statusOcr", "❌ Spracovanie sa nepodarilo");
+        updateStatus("statusAi", "❌ Skúste nahrať správu znovu");
+        updateStatus("statusSave", "❌ Uloženie neprebehlo");
+        alert("Spracovanie správy zlyhalo: " + error.message);
+      }
+    }
+
+    function attachUploadHandlers() {
+      const primary = document.getElementById("imageInput");
+      const secondary = document.getElementById("imageInputSecondary");
+
+      if (primary) {
+        primary.addEventListener("change", async (e) => {
+          const files = Array.from(e.target.files || []);
+          await handleFiles(files);
+        });
+      }
+
+      if (secondary) {
+        secondary.addEventListener("change", async (e) => {
+          const files = Array.from(e.target.files || []);
+          await handleFiles(files);
+        });
+      }
+    }
+
+    function renderAll() {
+      loadProfileName();
+      renderCounts();
+      renderRecentReports();
+      renderTimeline();
+      loadReports();
+      loadAppointments();
+      renderMedicationsOverview();
+    }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("SW registrovaný"))
+        .catch(err => console.error("SW chyba:", err));
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadLanguage();
+      loadProfileName();
+      attachUploadHandlers();
+      renderAll();
+    });
+  </script>
+</body>
+</html>
