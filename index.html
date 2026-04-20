@@ -673,6 +673,13 @@
   <button class="primary" onclick="printAiReport()">Tlačiť / PDF</button>
   <button class="light" onclick="emailAiReport()">Poslať mailom</button>
 </div>
+function emailAiReport() {
+  const reportText = buildAiReportText();
+  const subject = encodeURIComponent("AI prehľad lekárskej správy");
+  const body = encodeURIComponent(reportText);
+
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
         
       <div class="card">
         <h2>Časová os pacienta</h2>
