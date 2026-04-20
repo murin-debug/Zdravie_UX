@@ -1194,6 +1194,52 @@ Dátum exportu: ${new Date().toLocaleString("sk-SK")}
 
   return reportText;
 }
+function printAiReport() {
+  const reportText = buildAiReportText().replace(/\n/g, "<br>");
+
+  const printWindow = window.open("", "_blank", "width=900,height=700");
+  if (!printWindow) {
+    alert("Nepodarilo sa otvoriť okno pre tlač.");
+    return;
+  }
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>AI prehľad správy</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 32px;
+            color: #182230;
+            line-height: 1.6;
+          }
+          h1 {
+            color: #1aa7a8;
+            margin-bottom: 24px;
+          }
+          .box {
+            border: 1px solid #dce6ea;
+            border-radius: 12px;
+            padding: 20px;
+            background: #ffffff;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Zdravie Zálohované – AI prehľad správy</h1>
+        <div class="box">${reportText}</div>
+      </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.focus();
+
+  setTimeout(() => {
+    printWindow.print();
+  }, 400);
+}
     
     async function readText(files) {
       if (!files?.length) {
