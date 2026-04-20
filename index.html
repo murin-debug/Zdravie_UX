@@ -1129,14 +1129,14 @@
           : "-"
       );
 
-      setHTML(
-        "labsBox",
-        (result?.lab_results?.length)
-          ? `<ul>${result.lab_results.map(l =>
-              `<li><b>${escapeHtml(safeText(l.name))}:</b> ${escapeHtml(safeText(l.value))} (${escapeHtml(safeText(l.status))})<br>${escapeHtml(safeText(l.meaning))}</li>`
-            ).join("")}</ul>`
-          : "-"
-      );
+    setHTML(
+  "labsBox",
+  (result?.lab_results?.length)
+    ? `<ul>${result.lab_results.map(l =>
+        `<li><b>${escapeHtml(safeText(l.name))}:</b> ${escapeHtml(safeText(l.value))} (${escapeHtml(safeText(l.status))})<br>${escapeHtml(safeText(l.meaning))}</li>`
+      ).join("")}</ul>`
+    : `<div class="empty">Žiadne laboratórne výsledky neboli rozpoznané.</div>`
+);
 
       setHTML(
         "recommendationsBox",
