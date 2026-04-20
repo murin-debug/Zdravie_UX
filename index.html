@@ -1120,14 +1120,14 @@
           : "-"
       );
 
-      setHTML(
-        "medicationsBox",
-        (result?.medications?.length)
-          ? `<ul>${result.medications.map(m =>
-              `<li><b>${escapeHtml(safeText(m.name))}</b><br>Dávka: ${escapeHtml(safeText(m.dose))}<br>Schéma: ${escapeHtml(safeText(m.schedule))}<br>Dôvod: ${escapeHtml(safeText(m.reason))}</li>`
-            ).join("")}</ul>`
-          : "-"
-      );
+    setHTML(
+  "medicationsBox",
+  (result?.medications?.length)
+    ? `<ul>${result.medications.map(m =>
+        `<li><b>${escapeHtml(safeText(m.name))}</b><br>Dávka: ${escapeHtml(safeText(m.dose))}<br>Schéma: ${escapeHtml(safeText(m.schedule))}<br>Dôvod: ${escapeHtml(safeText(m.reason))}</li>`
+      ).join("")}</ul>`
+    : `<div class="empty">Žiadne lieky neboli rozpoznané.</div>`
+);
 
     setHTML(
   "labsBox",
