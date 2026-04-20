@@ -1240,7 +1240,13 @@ function printAiReport() {
     printWindow.print();
   }, 400);
 }
-    
+function emailAiReport() {
+  const reportText = buildAiReportText();
+  const subject = encodeURIComponent("AI prehľad lekárskej správy");
+  const body = encodeURIComponent(reportText);
+
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
     async function readText(files) {
       if (!files?.length) {
         alert("Vyber aspoň jednu fotku správy");
