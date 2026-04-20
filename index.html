@@ -1250,6 +1250,10 @@
         const result = data.result;
         window.lastStructuredAnalysis = result;
 
+        console.log("AI RESULT FULL:", result);
+console.log("AI MEDICATIONS:", result.medications);
+console.log("AI LAB RESULTS:", result.lab_results);
+
         const diagnosesText = (result.diagnoses || []).length
           ? result.diagnoses.map(d => `- ${d.code ? d.code + " " : ""}${d.name || ""}`.trim()).join("\n")
           : "-";
