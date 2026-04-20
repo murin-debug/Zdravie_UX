@@ -1248,6 +1248,9 @@ function emailAiReport() {
 
   window.location.href = `mailto:?subject=${subject}&body=${body}`;
 }
+    function goBackFromPrint() {
+  window.close();
+}
     async function readText(files) {
       if (!files?.length) {
         alert("Vyber aspoň jednu fotku správy");
