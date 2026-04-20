@@ -1386,37 +1386,59 @@ showDetectedMetaFromAnalysis();
       renderAll();
     }
 
-    function openSavedReport(key) {
-      const raw = localStorage.getItem(key);
-      if (!raw) return;
+   function openSavedReport(key) {
+  const raw = localStorage.getItem(key);
+  if (!raw) return;
 
-      try {
-        const data = JSON.parse(raw);
+  try {
+    const data = JSON.parse(raw);
 
-        const outputEl = document.getElementById("output");
-        const analysisEl = document.getElementById("analysis");
-        const profileNameEl = document.getElementById("profileName");
-        const profileNameProfileEl = document.getElementById("profileNameProfile");
+    const outputEl = document.getElementById("output");
+    const analysisEl = document.getElementById("analysis");
+    const profileNameEl = document.getElementById("profileName");
+    const profileNameProfileEl = document.getElementById("profileNameProfile");
 
-        if (outputEl) outputEl.value = data.report || "";
-        if (analysisEl) analysisEl.value = data.explanation || "";
-        if (profileNameEl) profileNameEl.value = data.name || "";
-        if (profileNameProfileEl) profileNameProfileEl.value = data.name || "";
+    if (outputEl) outputEl.value = data.report || "";
+    if (analysisEl) analysisEl.value = data.explanation || "";
+    if (profileNameEl) profileNameEl.value = data.name || "";
+    if (profileNameProfileEl) profileNameProfileEl.value = data.name || "";
 
-        window.lastStructuredAnalysis = data.structured || null;
+    window.lastStructuredAnalysis = data.structured || null;
 
-        if (data.structured) {
-          renderStructuredResult(data.structured);
-          showDetectedMetaFromAnalysis();
-        }
-
-        showTab("home");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } catch (e) {
-        console.error("Chyba pri otvorení správy:", e);
-        alert("Správu sa nepodarilo otvoriť.");
-      }
+    if (data.structured) {
+      renderStructuredResult(data.structured);
+      showDetectedMetaFromAnalysis();
+    } else {
+      setText("summaryBox", data.explanation || "AI vysvetlenie nie je uložené.");
+      setHTML("metaBox", `
+        <b>Špecializácia:</b> ${escapeHtml(data.specialty || "-")}<br>
+        <b>Typ dokumentu:</b> ${escapeHtml(data.documentType || "-")}<br>
+        <b>Dátum správy:</b> -<br>
+        <b>Lekár:</b> -<br>
+        <b>Pracovisko:</b> -
+      `);
+      setHTML("diagnosesBox", "-");
+      setHTML("medicationsBox", "-");
+      setHTML("labsBox", "-");
+      setHTML("recommendationsBox", "-");
+      setHTML("redFlagsBox", "-");
+      setHTML("questionsBox", "-");
     }
+
+    showTab("home");
+
+    setTimeout(() => {
+      const summaryEl = document.getElementById("summaryBox");
+      if (summaryEl) {
+        summaryEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 250);
+
+  } catch (e) {
+    console.error("Chyba pri otvorení správy:", e);
+    alert("Správu sa nepodarilo otvoriť.");
+  }
+}
 
     function deleteSavedReport(key) {
       if (!confirm("Naozaj chcete vymazať túto správu?")) return;
