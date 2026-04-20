@@ -1163,7 +1163,38 @@
           : "-"
       );
     }
+function buildAiReportText() {
+  const result = window.lastStructuredAnalysis || null;
 
+  const profileName = document.getElementById("profileName")?.value?.trim() || "";
+  const summary = document.getElementById("summaryBox")?.innerText?.trim() || "";
+  const meta = document.getElementById("metaBox")?.innerText?.trim() || "";
+  const labs = document.getElementById("labsBox")?.innerText?.trim() || "";
+  const meds = document.getElementById("medicationsBox")?.innerText?.trim() || "";
+
+  const reportText = `
+ZDRAVIE ZÁLOHOVANÉ – AI PREHĽAD SPRÁVY
+
+Meno osoby: ${profileName || "-"}
+
+ZROZUMITEĽNÉ VYSVETLENIE:
+${summary || "-"}
+
+META ÚDAJE:
+${meta || "-"}
+
+LABORATÓRNE VÝSLEDKY:
+${labs || "-"}
+
+LIEKY:
+${meds || "-"}
+
+Dátum exportu: ${new Date().toLocaleString("sk-SK")}
+`.trim();
+
+  return reportText;
+}
+    
     async function readText(files) {
       if (!files?.length) {
         alert("Vyber aspoň jednu fotku správy");
