@@ -1227,10 +1227,24 @@ function printAiReport() {
           }
         </style>
       </head>
-      <body>
-        <h1>Zdravie Zálohované – AI prehľad správy</h1>
-        <div class="box">${reportText}</div>
-      </body>
+     <body>
+  <div style="margin-bottom:20px;">
+    <button onclick="window.close()" style="
+      padding:10px 16px;
+      border:none;
+      border-radius:8px;
+      background:#19b6b8;
+      color:white;
+      font-weight:600;
+      cursor:pointer;
+    ">
+      ← Späť
+    </button>
+  </div>
+
+  <h1>Zdravie Zálohované – AI prehľad správy</h1>
+  <div class="box">${reportText}</div>
+</body>
     </html>
   `);
 
