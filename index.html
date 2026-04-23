@@ -1754,10 +1754,11 @@ showDetectedMetaFromAnalysis();
 
             <div class="result-box" style="margin-top:10px">${escapeHtml(shortReport || "-")}</div>
 
-            <div class="item-actions">
-              <button class="primary" onclick="openSavedReport('${key}')">Otvoriť</button>
-              <button class="danger" onclick="deleteSavedReport('${key}')">Vymazať</button>
-            </div>
+           <div class="item-actions">
+  <button class="primary" onclick="openSavedReport('${key}')">Otvoriť</button>
+  ${data.hasOriginalFiles ? `<button class="light" onclick="showOriginalReport('${key}')">Originál</button>` : ""}
+  <button class="danger" onclick="deleteSavedReport('${key}')">Vymazať</button>
+</div>
           </div>
         `;
       }).join("");
