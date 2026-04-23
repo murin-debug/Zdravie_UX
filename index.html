@@ -906,7 +906,177 @@ window.currentOriginalFiles = [];
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
     }
+const DB_NAME = "zdravie_originals_db";
+const DB_VERSION = 1;
+const STORE_NAME = "original_reports";
 
+function openOriginalsDb() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = function (event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: "reportId" });
+      }
+    };
+
+    request.onsuccess = function () {
+      resolve(request.result);
+    };
+
+    request.onerror = function () {
+      reject(request.error);
+    };
+  });
+}
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveOriginalFilesToDb(reportId, files) {
+  if (!files || !files.length) return;
+
+  const pages = [];
+  for (const file of files) {
+    const dataUrl = await fileToDataUrl(file);
+    pages.push({
+      name: file.name || "strana",
+      type: file.type || "image/jpeg",
+      size: file.size || 0,
+      dataUrl
+    });
+  }
+
+  const db = await openOriginalsDb();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+
+    store.put({
+      reportId,
+      createdAt: new Date().toISOString(),
+      pages
+    });
+
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function getOriginalFilesFromDb(reportId) {
+  const db = await openOriginalsDb();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const request = store.get(reportId);
+
+    request.onsuccess = () => resolve(request.result || null);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function deleteOriginalFilesFromDb(reportId) {
+  const db = await openOriginalsDb();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    store.delete(reportId);
+
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function clearOriginalsDb() {
+  const db = await openOriginalsDb();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    store.clear();
+
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function showOriginalReport(reportId) {
+  try {
+    const original = await getOriginalFilesFromDb(reportId);
+
+    if (!original || !original.pages || !original.pages.length) {
+      alert("Originál správy nie je uložený.");
+      return;
+    }
+
+    const win = window.open("", "_blank", "width=1000,height=800");
+    if (!win) {
+      alert("Nepodarilo sa otvoriť okno s originálom.");
+      return;
+    }
+
+    const pagesHtml = original.pages.map((page, index) => `
+      <div style="margin-bottom:28px;">
+        <div style="font-weight:700;margin-bottom:10px;">
+          Strana ${index + 1}${page.name ? ` – ${page.name}` : ""}
+        </div>
+        <img src="${page.dataUrl}" style="max-width:100%;border:1px solid #dce6ea;border-radius:12px;" />
+      </div>
+    `).join("");
+
+    win.document.write(`
+      <html>
+        <head>
+          <title>Originál správy</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 24px;
+              background: #f5f8fa;
+              color: #182230;
+            }
+            .toolbar {
+              margin-bottom: 20px;
+            }
+            button {
+              padding: 10px 16px;
+              border: none;
+              border-radius: 8px;
+              background: #1aa7a8;
+              color: white;
+              font-weight: 600;
+              cursor: pointer;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="toolbar">
+            <button onclick="window.close()">← Späť</button>
+          </div>
+          <h1>Originál správy</h1>
+          ${pagesHtml}
+        </body>
+      </html>
+    `);
+
+    win.document.close();
+    win.focus();
+  } catch (e) {
+    console.error("Chyba pri otváraní originálu:", e);
+    alert("Originál správy sa nepodarilo otvoriť.");
+  }
+}
+    
     function formatDateSK(dateString) {
       if (!dateString) return "-";
       try {
