@@ -1721,12 +1721,18 @@ showDetectedMetaFromAnalysis();
   renderAll();
 }
 
-    function clearAllData() {
-      if (!confirm("Naozaj chcete vymazať všetky uložené údaje?")) return;
-      localStorage.clear();
-      window.lastStructuredAnalysis = null;
-      location.reload();
-    }
+   async function clearAllData() {
+  if (!confirm("Naozaj chcete vymazať všetky uložené údaje?")) return;
+
+  localStorage.clear();
+
+  await clearOriginalsDb();
+
+  window.lastStructuredAnalysis = null;
+  window.currentOriginalFiles = [];
+
+  location.reload();
+}
 
     function loadReports() {
       const historyDiv = document.getElementById("history");
