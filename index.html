@@ -1682,6 +1682,8 @@ showDetectedMetaFromAnalysis();
 
     async function handleFiles(files) {
       if (!files?.length) return;
+      
+      window.currentOriginalFiles = files;
 
       const selectedFileNameEl = document.getElementById("selectedFileName");
       if (files.length === 1) selectedFileNameEl.textContent = files[0].name;
