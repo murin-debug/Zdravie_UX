@@ -1711,11 +1711,15 @@ showDetectedMetaFromAnalysis();
   }
 }
 
-    function deleteSavedReport(key) {
-      if (!confirm("Naozaj chcete vymazať túto správu?")) return;
-      localStorage.removeItem(key);
-      renderAll();
-    }
+   async function deleteSavedReport(key) {
+  if (!confirm("Naozaj chcete vymazať túto správu?")) return;
+
+  localStorage.removeItem(key);
+
+  await deleteOriginalFilesFromDb(key);
+
+  renderAll();
+}
 
     function clearAllData() {
       if (!confirm("Naozaj chcete vymazať všetky uložené údaje?")) return;
