@@ -1623,29 +1623,39 @@ showDetectedMetaFromAnalysis();
       }
     }
 
-    function saveReport() {
-      const name = document.getElementById("profileName")?.value?.trim() || "";
-      const report = document.getElementById("output")?.value || "";
-      const explanation = document.getElementById("analysis")?.value || "";
+    async function saveReport() {
+  const name = document.getElementById("profileName")?.value?.trim() || "";
+  const report = document.getElementById("output")?.value || "";
+  const explanation = document.getElementById("analysis")?.value || "";
 
-      if (!report.trim()) {
-        alert("Najprv načítaj lekársku správu.");
-        return;
-      }
+  if (!report.trim()) {
+    alert("Najprv načítaj lekársku správu.");
+    return;
+  }
 
-      const data = {
-        name,
-        specialty: window.lastStructuredAnalysis?.specialty || "",
-        documentType: window.lastStructuredAnalysis?.document_type || "",
-        report,
-        explanation,
-        structured: window.lastStructuredAnalysis || null,
-        date: new Date().toISOString()
-      };
+  const reportId = "report_" + Date.now();
 
-      localStorage.setItem("report_" + Date.now(), JSON.stringify(data));
-      renderAll();
-    }
+  const data = {
+    id: reportId,
+    name,
+    specialty: window.lastStructuredAnalysis?.specialty || "",
+    documentType: window.lastStructuredAnalysis?.document_type || "",
+    report,
+    explanation,
+    structured: window.lastStructuredAnalysis || null,
+    hasOriginalFiles: !!(window.currentOriginalFiles && window.currentOriginalFiles.length),
+    originalPagesCount: window.currentOriginalFiles?.length || 0,
+    date: new Date().toISOString()
+  };
+
+  localStorage.setItem(reportId, JSON.stringify(data));
+
+  if (window.currentOriginalFiles && window.currentOriginalFiles.length) {
+    await saveOriginalFilesToDb(reportId, window.currentOriginalFiles);
+  }
+
+  renderAll();
+}
 
    function openSavedReport(key) {
   const raw = localStorage.getItem(key);
