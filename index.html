@@ -1155,23 +1155,17 @@ async function showOriginalReport(reportId) {
       if (b) b.value = value;
     }
 
-    function updateStatus(id, text) {
-      const el = document.getElementById(id);
-      if (el) el.textContent = text;
-    }
-
     function showProcessStatus() {
-      const box = document.getElementById("processStatus");
-      if (box) box.classList.remove("hidden");
+      const box = document.getElementById("aiLoadingBox")
+  box.classList.remove("hidden");
     }
+function hideProcessStatus() {
+  const box =
+    document.getElementById("aiLoadingBox");
 
-    function resetProcessStatus() {
-      updateStatus("statusUpload", "✅ Správa nahraná");
-      updateStatus("statusOcr", "⏳ Čítam správu...");
-      updateStatus("statusAi", "⏳ Pripravujem vysvetlenie...");
-      updateStatus("statusSave", "⏳ Ukladám správu...");
-    }
-
+  box.classList.add("hidden");
+}
+    
     function showDetectedMetaFromAnalysis() {
       const meta = document.getElementById("detectedMeta");
       const result = window.lastStructuredAnalysis;
