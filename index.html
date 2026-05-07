@@ -593,12 +593,34 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
 
             <div id="detectedMeta" class="detected-box hidden">Rozpoznané: —</div>
 
-            <div id="processStatus" class="status-box hidden">
-              <div id="statusUpload">✅ Správa nahraná</div>
-              <div id="statusOcr">⏳ Čítam správu...</div>
-              <div id="statusAi">⏳ Pripravujem vysvetlenie...</div>
-              <div id="statusSave">⏳ Ukladám správu...</div>
-            </div>
+           <div id="aiLoadingBox" class="hidden" style="
+  margin-top:18px;
+  padding:22px;
+  border-radius:22px;
+  background:#f4fbfb;
+  border:1px solid #cfe9e9;
+  text-align:center;
+">
+  <div style="font-size:42px;margin-bottom:10px;">
+    ⏳
+  </div>
+
+  <div style="
+    font-size:18px;
+    font-weight:700;
+    color:#183042;
+  ">
+    Pracujeme na zrozumiteľnom vysvetlení správy…
+  </div>
+
+  <div style="
+    margin-top:8px;
+    color:#5b6b7a;
+    font-size:14px;
+  ">
+    Môže to trvať niekoľko sekúnd
+  </div>
+</div>
 
        
         </div>
