@@ -1908,12 +1908,15 @@ showDetectedMetaFromAnalysis();
         await analyzeText();
         updateStatus("statusAi", "✅ Vysvetlenie pripravené");
 
-        updateStatus("statusSave", "⏳ Ukladám správu...");
-        saveReport();
-        updateStatus("statusSave", "✅ Správa uložená");
+       updateStatus("statusSave", "⏳ Ukladám správu...");
+await saveReport();
+updateStatus("statusSave", "✅ Správa uložená");
 
-        renderAll();
-        showTab("home");
+hideProcessStatus();
+
+renderAll();
+showTab("home");
+        
       } catch (error) {
         console.error("Automatický flow zlyhal:", error);
         updateStatus("statusOcr", "❌ Spracovanie sa nepodarilo");
