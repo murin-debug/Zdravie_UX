@@ -1894,23 +1894,11 @@ showDetectedMetaFromAnalysis();
 
       try {
         showProcessStatus();
-        resetProcessStatus();
-
-        updateStatus("statusUpload", "✅ Správa nahraná");
-        updateStatus("statusOcr", "⏳ Čítam správu...");
-        updateStatus("statusAi", "⏳ Čaká na AI vysvetlenie...");
-        updateStatus("statusSave", "⏳ Čaká na uloženie...");
-
+       
         await readText(files);
-        updateStatus("statusOcr", "✅ Správa prečítaná");
+       await analyzeText();
 
-        updateStatus("statusAi", "⏳ Pripravujem vysvetlenie...");
-        await analyzeText();
-        updateStatus("statusAi", "✅ Vysvetlenie pripravené");
-
- updateStatus("statusSave", "⏳ Ukladám správu...");
-saveReport();
-updateStatus("statusSave", "✅ Správa uložená");
+await saveReport();
 
 hideProcessStatus();
 
@@ -1922,9 +1910,7 @@ showTab("home");
   hideProcessStatus();
 
   console.error("Automatický flow zlyhal:", error);
-        updateStatus("statusOcr", "❌ Spracovanie sa nepodarilo");
-        updateStatus("statusAi", "❌ Skúste nahrať správu znovu");
-        updateStatus("statusSave", "❌ Uloženie neprebehlo");
+       
         alert("Spracovanie správy zlyhalo: " + error.message);
       }
     }
