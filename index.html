@@ -1917,8 +1917,11 @@ hideProcessStatus();
 renderAll();
 showTab("home");
         
-      } catch (error) {
-        console.error("Automatický flow zlyhal:", error);
+     } catch (error) {
+
+  hideProcessStatus();
+
+  console.error("Automatický flow zlyhal:", error);
         updateStatus("statusOcr", "❌ Spracovanie sa nepodarilo");
         updateStatus("statusAi", "❌ Skúste nahrať správu znovu");
         updateStatus("statusSave", "❌ Uloženie neprebehlo");
