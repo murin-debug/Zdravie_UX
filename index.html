@@ -1976,6 +1976,35 @@ showTab("home");
       attachUploadHandlers();
       renderAll();
     });
+async function downloadPDF() {
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const text =
+    document.getElementById("analysis").value ||
+    document.getElementById("output").value ||
+    "Bez dostupného textu.";
+
+  const splitText = doc.splitTextToSize(text, 180);
+
+  doc.text(splitText, 10, 10);
+
+  // iPhone kompatibilita
+  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+
+    const pdfBlob = doc.output("blob");
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+
+    window.open(pdfUrl, "_blank");
+
+  } else {
+
+    doc.save("zdravotna_sprava.pdf");
+
+  }
+}
+    
   </script>
 </body>
 </html>
