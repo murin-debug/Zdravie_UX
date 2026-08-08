@@ -733,11 +733,12 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
 
         <div class="stack">
           <div class="card">
-            <h2 id="safeTitle">Vaše súkromie</h2>
-           <div class="safety-box privacy-summary">
-             Fotografia zostáva vo vašom zariadení. Na vytvorenie vysvetlenia sa odošle iba rozpoznaný text.<br>
-             <a href="privacy.html" target="_blank" rel="noopener">Ako chránime vaše údaje</a>
-           </div>
+            <h2>Majte ZEVIORA vždy poruke</h2>
+            <p class="lead">Pridajte si aplikáciu na plochu mobilu a otvárajte ju cez vlastnú ikonu.</p>
+            <button class="primary" id="installAppBtnHome" onclick="installZeviora()">Pridať ZEVIORA do mobilu</button>
+
+            <div style="margin-top:20px;padding-top:18px;border-top:1px solid #e2eaed;">
+              <h3 id="safeTitle" style="margin-bottom:10px;">Pred spracovaním správy</h3>
 <div class="consent-stack">
   <label class="consent-row">
     <input type="checkbox" id="gdprConsent" />
@@ -747,25 +748,8 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
     <input type="checkbox" id="termsConsent" />
     <span>Som dospelý/á a súhlasím s <a href="terms.html" target="_blank" rel="noopener">Podmienkami používania</a>.</span>
   </label>
+  <a class="tiny" href="privacy.html" target="_blank" rel="noopener" style="color:var(--brand-dark);font-weight:700;">Ochrana osobných údajov</a>
 </div>
-            
-            <div class="warning-box" id="warningBoxText">
-              ZEVIORA pomáha porozumieť zdravotnej správe, nenahrádza však lekára. V naliehavom prípade volajte 155 alebo 112.
-            </div>
-
-            <div style="margin-top:14px;">
-              <button class="light" onclick="toggleHowItWorks()" id="howItWorksBtn">Ako to funguje</button>
-            </div>
-
-            <div id="howItWorksBox" class="result-box hidden" style="margin-top:12px;">
-              1. Nahráte správu.<br>
-              2. OCR ju prečíta priamo vo vašom zariadení.<br>
-              3. Po vašom súhlase sa rozpoznaný text odošle na AI vysvetlenie.<br>
-              4. Výsledok sa uloží do histórie v tomto zariadení.
-              <div style="margin-top:14px;">
-                <button class="light" onclick="showTab('profile')">Potrebujete pomoc? Kontaktujte nás</button>
-              </div>
-              
             </div>
           </div>
         </div>
@@ -987,6 +971,15 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
             <summary>Technické informácie o súkromí</summary>
             <div class="small" style="margin-top:10px;line-height:1.6;">
               Originálny obrázok sa do AI neposiela a história zostáva v tomto zariadení. Rozpoznaný text sa po výslovnom súhlase odošle cez zabezpečený backend do OpenAI API. Podľa štandardných nastavení môže byť obsah súčasťou bezpečnostných logov najviac 30 dní a nepoužíva sa na trénovanie modelov.
+            </div>
+          </details>
+          <details style="margin-top:10px;">
+            <summary>Ako aplikácia spracuje správu</summary>
+            <div class="small" style="margin-top:10px;line-height:1.6;">
+              1. Nahráte fotografiu správy.<br>
+              2. OCR ju prečíta priamo vo vašom zariadení.<br>
+              3. Po vašom súhlase sa rozpoznaný text odošle na AI vysvetlenie.<br>
+              4. Výsledok sa uloží do histórie v tomto zariadení.
             </div>
           </details>
         </div>
@@ -1275,7 +1268,11 @@ async function showOriginalReport(reportId) {
       const instructions = document.getElementById("installInstructions");
 
       if (!deferredInstallPrompt) {
-        if (instructions) instructions.classList.toggle("hidden");
+        showTab("profile");
+        if (instructions) {
+          instructions.classList.remove("hidden");
+          setTimeout(() => instructions.scrollIntoView({ behavior: "smooth", block: "center" }), 250);
+        }
         return;
       }
 
@@ -1295,11 +1292,12 @@ async function showOriginalReport(reportId) {
 
     window.addEventListener("appinstalled", () => {
       deferredInstallPrompt = null;
-      const button = document.getElementById("installAppBtn");
-      if (button) {
+      ["installAppBtnHome", "installAppBtn"].forEach((id) => {
+        const button = document.getElementById(id);
+        if (!button) return;
         button.textContent = "ZEVIORA je pridaná v zariadení";
         button.disabled = true;
-      }
+      });
     });
 
     function setLanguage(lang) {
