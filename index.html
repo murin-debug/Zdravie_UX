@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Zdravie Zrozumiteľne</title>
+  <title>ZEVIORA – Zdravie zrozumiteľne</title>
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <meta name="referrer" content="no-referrer" />
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#1aa7a8" />
   <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -97,6 +100,31 @@
       color:var(--muted);
       font-size:14px;
       font-weight:600;
+    }
+
+    .brand-logo{
+      display:block;
+      width:min(360px, 72vw);
+      height:auto;
+    }
+
+    .brand-copy{
+      min-width:0;
+    }
+
+    .brand-identity{
+      margin:4px 0 0;
+      color:var(--text);
+      font-size:15px;
+      font-weight:750;
+      letter-spacing:.01em;
+    }
+
+    .brand-operator{
+      margin:2px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
     }
 
     .tab-section{display:none}
@@ -500,6 +528,54 @@
       font-weight:700;
     }
 
+    .pilot-badge{
+      display:inline-flex;
+      align-items:center;
+      width:max-content;
+      margin-top:7px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#eaf8f8;
+      border:1px solid #bfe5e5;
+      color:#126f70;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.02em;
+    }
+
+    .consent-stack{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .consent-row{
+      display:flex;
+      align-items:flex-start;
+      gap:9px;
+      font-size:13px;
+      line-height:1.45;
+      color:#263546;
+    }
+
+    .consent-row input{
+      margin-top:3px;
+      flex:0 0 auto;
+    }
+
+    .legal-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 16px;
+      margin-top:12px;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .legal-links a{
+      color:var(--brand-dark);
+    }
+
     @media (max-width: 940px){
       .grid-main,
       .result-grid,
@@ -537,6 +613,16 @@
       .brand-title{
         font-size:18px;
       }
+
+      .brand-row{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:6px;
+      }
+
+      .brand-logo{
+        width:min(320px, 100%);
+      }
     }
   </style>
 </head>
@@ -544,18 +630,11 @@
 
   <div class="app-header">
     <div class="brand-row">
-      <div class="brand-badge">ZZ</div>
-      <div>
-       <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
- 
-  <div>
-   <h1 style="margin:0;">Zdravie Zrozumiteľne</h1>
-<div class="muted small" style="margin-top:4px;font-weight:600;">
-  Vaše zdravotné správy jednoducho a zrozumiteľne
-</div>
-  </div>
-</div>
-        
+      <img class="brand-logo" src="zeviora-logo-header.png" alt="ZEVIORA Health">
+      <div class="brand-copy">
+        <div class="brand-identity" id="appTitle">Zdravie zrozumiteľne</div>
+        <div class="brand-operator">Slovenská verzia · prevádzkuje Zdravie zrozumiteľne, o.z.</div>
+        <div class="pilot-badge">Verejný pilot · 18+</div>
       </div>
     </div>
   </div>
@@ -589,7 +668,8 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
 
             <div class="muted small" id="selectedFileName">Žiadna správa nie je nahraná</div> 
             <p class="tiny muted" style="margin-top:6px;">
-  Môžete nahrať aj viac strán jednej správy. 
+              Môžete nahrať aj viac strán jednej správy.
+            </p>
 
             <div id="detectedMeta" class="detected-box hidden">Rozpoznané: —</div>
 
@@ -629,53 +709,41 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
           <div class="card">
             <h2 id="safeTitle">Bezpečnosť</h2>
            <div class="safety-box">
-✅ Dáta zostávajú vo vašom zariadení<br>
-✅ Správy sa neukladajú na server<br>
-⚠️ Pri zmene zariadenia si dáta zálohujte
+✅ Originálny obrázok sa do AI neposiela<br>
+✅ História sa ukladá iba v tomto zariadení<br>
+⚠️ Rozpoznaný text sa po vašom výslovnom súhlase odošle cez náš backend do OpenAI API<br>
+⚠️ OpenAI môže obsah bezpečnostne uchovávať najviac 30 dní; štandardne ho nepoužíva na trénovanie modelov
 </div>
-<div style="margin-top:12px;">
-  <label style="display:flex;gap:8px;font-size:13px;">
+<div class="consent-stack">
+  <label class="consent-row">
     <input type="checkbox" id="gdprConsent" />
-    Súhlasím so spracovaním údajov pre AI vysvetlenie.
+    <span><strong>Výslovne súhlasím</strong> so spracovaním údajov o zdraví a s dočasným odoslaním rozpoznaného textu cez backend ZEVIORA do OpenAI API na vytvorenie zrozumiteľného vysvetlenia.</span>
   </label>
-
-  <p class="tiny muted" style="margin-top:6px;">
-    Text správy sa dočasne odosiela na AI analýzu. Neuchováva sa.
+  <label class="consent-row">
+    <input type="checkbox" id="termsConsent" />
+    <span>Potvrdzujem, že mám najmenej 18 rokov a súhlasím s <a href="terms.html" target="_blank" rel="noopener">Podmienkami používania</a>. Prečítal/a som si <a href="privacy.html" target="_blank" rel="noopener">Zásady ochrany osobných údajov</a>.</span>
+  </label>
+  <p class="tiny muted" style="margin:0;">
+    Backend obsah správy neukladá do databázy. Výsledok a história zostávajú v tomto zariadení, kým ich nevymažete. Súhlas môžete odmietnuť tým, že správu nenahráte.
   </p>
 </div>
             
             <div class="warning-box" id="warningBoxText">
-              ⚠️ AI vysvetlenie nenahrádza lekára.
+              ⚠️ AI môže urobiť chybu a nenahrádza lekára. Pri náhlom ohrození zdravia volajte 155 alebo 112.
             </div>
 
             <div style="margin-top:14px;">
-              <button class="light" onclick="toggleHowItWorks()" id="howItWorksBtn">Ako to funguje a kontakt</button>
+              <button class="light" onclick="toggleHowItWorks()" id="howItWorksBtn">Ako to funguje</button>
             </div>
 
             <div id="howItWorksBox" class="result-box hidden" style="margin-top:12px;">
               1. Nahráte správu.<br>
-              2. Aplikácia ju prečíta pomocou OCR.<br>
-              3. AI pripraví jednoduché vysvetlenie, laboratórne zhrnutie a lieky.<br>
-              4. Správa sa uloží do histórie.
-<div class="card" style="margin-top:16px;">
-  <h3>Kontakt a spätná väzba</h3>
-
-  <div class="result-box" style="line-height:1.7;">
-    📩 E-mail: 
-    <a href="mailto:info@zdraviezrozumitelne.sk">
-      info@zdraviezrozumitelne.sk
-    </a>
-    <br><br>
-
-    🌐 Web:
-    <a href="https://www.zdraviezrozumitelne.sk" target="_blank">
-      www.zdraviezrozumitelne.sk
-    </a>
-    <br><br>
-
-    💬 Vaše návrhy, odporúčania a spätná väzba sú vítané.
-  </div>
-</div>
+              2. OCR ju prečíta priamo vo vašom zariadení.<br>
+              3. Po vašom súhlase sa rozpoznaný text odošle na AI vysvetlenie.<br>
+              4. Výsledok sa uloží do histórie v tomto zariadení.
+              <div style="margin-top:14px;">
+                <button class="light" onclick="showTab('profile')">Potrebujete pomoc? Kontaktujte nás</button>
+              </div>
               
             </div>
           </div>
@@ -870,7 +938,7 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
           <div class="field">
             <label>O aplikácii</label>
             <div class="result-box">
-              Zdravie-UX je osobný zdravotný archív s AI vysvetlením správ, laboratórnych výsledkov a liekov.
+              ZEVIORA – Zdravie zrozumiteľne je verejná pilotná služba pre dospelých. Pomáha zrozumiteľne vysvetliť obsah zdravotnej správy. Výstup môže obsahovať chyby, nie je diagnózou ani odporúčaním liečby a nenahrádza lekára.
             </div>
           </div>
 
@@ -878,6 +946,25 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
             <button class="light" onclick="syncProfileName()">Uložiť meno</button>
             <button class="light" onclick="clearAllData()">Vymazať všetky údaje</button>
           </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <h3>O aplikácii a kontakt</h3>
+        <div class="result-box" style="line-height:1.7;">
+          <strong>ZEVIORA – Zdravie zrozumiteľne</strong><br>
+          Slovenskú verziu prevádzkuje Zdravie zrozumiteľne, o.z.<br>
+          IČO: 57 557 284<br><br>
+          Spätná väzba a technická podpora:<br>
+          <a href="mailto:info@zdraviezrozumitelne.sk">info@zdraviezrozumitelne.sk</a><br><br>
+          <span class="tiny muted">Na tento e-mail neposielajte lekárske správy ani iné citlivé zdravotné údaje. Aplikácia neposkytuje zdravotné konzultácie. Pri akútnych ťažkostiach kontaktujte lekára alebo tiesňovú zdravotnú službu.</span>
+          <div class="legal-links">
+            <a href="privacy.html" target="_blank" rel="noopener">Ochrana osobných údajov</a>
+            <a href="terms.html" target="_blank" rel="noopener">Podmienky používania</a>
+          </div>
+        </div>
+        <div class="hero-actions" style="margin-bottom:0;">
+          <a class="btn-like primary" style="display:inline-flex;align-items:center;justify-content:center;" href="mailto:info@zdraviezrozumitelne.sk?subject=Sp%C3%A4tn%C3%A1%20v%C3%A4zba%20k%20aplik%C3%A1cii%20ZEVIORA">Napísať nám</a>
         </div>
       </div>
     </section>
@@ -911,11 +998,12 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
   <script>
     const AI_ENDPOINT = "https://zdravie-ai-backend.onrender.com/analyze";
     const APP_LANG_KEY = "zz_app_lang";
+    const CONSENT_VERSION = "2026-08-08-v1";
     window.lastStructuredAnalysis = null;
 window.currentOriginalFiles = [];
     const TEXTS = {
       sk: {
-        appTitle: "Zdravie Zrozumiteľne",
+        appTitle: "Zdravie zrozumiteľne",
         appSubtitle: "Správy zrozumiteľne a uložené vo vašom zariadení"
       },
       cz: {},
@@ -1444,7 +1532,7 @@ function printAiReport() {
     </button>
   </div>
 
-  <h1>Zdravie Zálohované – AI prehľad správy</h1>
+  <h1>ZEVIORA – Zdravie zrozumiteľne: AI prehľad správy</h1>
   <div class="box">${reportText}</div>
 </body>
     </html>
@@ -1461,6 +1549,11 @@ function printAiReport() {
 }
 }
 function emailAiReport() {
+  const confirmed = confirm(
+    "E-mail nemusí byť bezpečný spôsob prenosu zdravotných údajov. Chcete napriek tomu otvoriť e-mail s obsahom AI prehľadu?"
+  );
+  if (!confirmed) return;
+
   const reportText = buildAiReportText();
   const subject = encodeURIComponent("AI prehľad lekárskej správy");
   const body = encodeURIComponent(reportText);
@@ -1548,7 +1641,17 @@ function emailAiReport() {
         const response = await fetch(AI_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text, specialty, documentType })
+          body: JSON.stringify({
+            text,
+            specialty,
+            documentType,
+            consent: {
+              healthData: true,
+              termsAccepted: true,
+              ageConfirmed: true,
+              version: CONSENT_VERSION
+            }
+          })
         });
 
         const data = await response.json();
@@ -1559,10 +1662,6 @@ function emailAiReport() {
 
         const result = data.result;
         window.lastStructuredAnalysis = result;
-
-        console.log("AI RESULT FULL:", result);
-console.log("AI MEDICATIONS:", result.medications);
-console.log("AI LAB RESULTS:", result.lab_results);
 
         const diagnosesText = (result.diagnoses || []).length
           ? result.diagnoses.map(d => `- ${d.code ? d.code + " " : ""}${d.name || ""}`.trim()).join("\n")
@@ -1905,6 +2004,24 @@ showDetectedMetaFromAnalysis();
 
     async function handleFiles(files) {
       if (!files?.length) return;
+
+      const healthDataConsent = document.getElementById("gdprConsent")?.checked;
+      const termsConsent = document.getElementById("termsConsent")?.checked;
+
+      if (!healthDataConsent || !termsConsent) {
+        const primary = document.getElementById("imageInput");
+        const secondary = document.getElementById("imageInputSecondary");
+        if (primary) primary.value = "";
+        if (secondary) secondary.value = "";
+
+        alert("Pred nahratím správy je potrebný výslovný súhlas so spracovaním údajov o zdraví, potvrdenie veku 18+ a prijatie podmienok.");
+        return;
+      }
+
+      localStorage.setItem("zz_consent_receipt", JSON.stringify({
+        version: CONSENT_VERSION,
+        acceptedAt: new Date().toISOString()
+      }));
       
       window.currentOriginalFiles = files;
 

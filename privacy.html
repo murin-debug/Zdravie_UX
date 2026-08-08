@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>Ochrana osobných údajov – ZEVIORA</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <style>
+    :root{--brand:#1aa7a8;--dark:#153044;--muted:#5f6b7a;--line:#dce6ea;--bg:#eef3f5}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--dark);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    main{width:min(900px,calc(100% - 28px));margin:28px auto 60px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,52px);box-shadow:0 18px 50px rgba(21,48,68,.08)}
+    .logo{width:min(340px,100%);height:auto;display:block;margin-bottom:18px} h1{font-size:clamp(28px,5vw,44px);line-height:1.12;margin:0 0 8px} h2{font-size:21px;margin:32px 0 8px} h3{font-size:17px;margin:20px 0 6px}
+    p,li{color:#273849} .muted{color:var(--muted)} a{color:#117f80} .notice{padding:16px 18px;background:#effafa;border:1px solid #c8e8e8;border-radius:16px}
+    .back{display:inline-flex;margin-top:30px;padding:11px 16px;border-radius:12px;background:var(--brand);color:#fff;text-decoration:none;font-weight:750}
+    address{font-style:normal}.small{font-size:14px} ul{padding-left:22px}
+  </style>
+</head>
+<body>
+<main>
+  <img class="logo" src="zeviora-logo-header.png" alt="ZEVIORA Health">
+  <h1>Zásady ochrany osobných údajov</h1>
+  <p class="muted">ZEVIORA – Zdravie zrozumiteľne · verzia 2026-08-08-v1</p>
+
+  <div class="notice">
+    Aplikácia je určená dospelým používateľom. Originálny obrázok správy sa do AI neposiela. Rozpoznaný text však môže obsahovať údaje o zdraví a po vašom výslovnom súhlase sa odošle cez náš backend do OpenAI API.
+  </div>
+
+  <h2>1. Prevádzkovateľ</h2>
+  <address>
+    <strong>Zdravie zrozumiteľne, o.z.</strong><br>
+    IČO: 57 557 284<br>
+    registrácia: VVS/1-900/90-74082<br>
+    Na Hrebienku 1490/7, 811 02 Bratislava-Staré Mesto<br>
+    e-mail: <a href="mailto:info@zdraviezrozumitelne.sk">info@zdraviezrozumitelne.sk</a>
+  </address>
+
+  <h2>2. Aké údaje aplikácia spracúva</h2>
+  <h3>Údaje uložené iba vo vašom zariadení</h3>
+  <ul>
+    <li>originálne obrázky zdravotných správ,</li>
+    <li>OCR text, AI vysvetlenia a história správ,</li>
+    <li>meno profilu, prehľad liekov, návštevy a poznámky, ktoré si zadáte,</li>
+    <li>lokálny záznam o udelení súhlasu a verzii týchto zásad.</li>
+  </ul>
+  <p>Tieto údaje používame prostredníctvom úložísk prehliadača Local Storage a IndexedDB. OZ ich nevie na diaľku prezerať ani vymazať.</p>
+
+  <h3>Údaje odoslané na AI spracovanie</h3>
+  <ul>
+    <li>text rozpoznaný z dokumentu pomocou OCR,</li>
+    <li>zvolený typ dokumentu a medicínska špecializácia, ak ich používateľ uvedie,</li>
+    <li>údaje nachádzajúce sa priamo v texte, ktoré môžu zahŕňať identifikačné a zdravotné údaje.</li>
+  </ul>
+  <p>Originálny obrázok sa do backendu ani OpenAI API neposiela.</p>
+
+  <h3>Technické a kontaktné údaje</h3>
+  <p>Poskytovatelia hostingu môžu spracovať bežné technické údaje, napríklad IP adresu, čas požiadavky, typ prehliadača a stavový kód. Ak nám napíšete e-mail, spracujeme vašu adresu a obsah komunikácie. E-mail nepoužívajte na posielanie zdravotných správ.</p>
+
+  <h2>3. Účely a právny základ</h2>
+  <ul>
+    <li><strong>AI vysvetlenie:</strong> váš výslovný súhlas podľa čl. 6 ods. 1 písm. a) a čl. 9 ods. 2 písm. a) GDPR.</li>
+    <li><strong>Lokálne funkcie aplikácie:</strong> vykonanie služby, ktorú ste si vyžiadali, a technické fungovanie aplikácie.</li>
+    <li><strong>Bezpečnosť a prevádzka:</strong> oprávnený záujem na ochrane služby, kontrole chýb a zabránení zneužitiu; obsah zdravotnej správy do našich aplikačných logov nezapisujeme.</li>
+    <li><strong>Komunikácia a spätná väzba:</strong> vybavenie vašej žiadosti a oprávnený záujem na zlepšovaní pilotnej služby.</li>
+  </ul>
+
+  <h2>4. Príjemcovia a poskytovatelia</h2>
+  <ul>
+    <li><strong>Netlify, Inc.</strong> – hosting používateľského rozhrania,</li>
+    <li><strong>Render Services, Inc.</strong> – prevádzka zabezpečeného backendu,</li>
+    <li><strong>OpenAI Ireland Ltd.</strong> – spracovanie rozpoznaného textu prostredníctvom OpenAI API,</li>
+    <li><strong>jsDelivr a cdnjs/Cloudflare</strong> – doručenie technických knižníc OCR a PDF; originálny dokument ani OCR text im aplikácia neposiela.</li>
+  </ul>
+  <p>Pri prenosoch mimo Európskeho hospodárskeho priestoru sa uplatňujú mechanizmy a záruky uvedené v podmienkach a dodatkoch o spracúvaní údajov príslušných poskytovateľov, vrátane štandardných zmluvných doložiek alebo platných rámcov na prenos údajov.</p>
+
+  <h2>5. Uchovávanie</h2>
+  <ul>
+    <li><strong>Vo vašom zariadení:</strong> až do vymazania jednotlivých správ, použitia funkcie „Vymazať všetky údaje“, vymazania dát prehliadača alebo odinštalovania aplikácie.</li>
+    <li><strong>Backend ZEVIORA:</strong> obsah správy sa neukladá do databázy ani do aplikačných logov; počas požiadavky sa spracuje prechodne.</li>
+    <li><strong>OpenAI API:</strong> podľa štandardných nastavení môže byť vstup a výstup súčasťou bezpečnostných logov najviac 30 dní, ak právne alebo bezpečnostné dôvody nevyžadujú dlhšie uchovanie. API obsah sa štandardne nepoužíva na trénovanie modelov.</li>
+    <li><strong>E-mailová komunikácia:</strong> po čas potrebný na vybavenie žiadosti a primeranú evidenciu komunikácie.</li>
+  </ul>
+
+  <h2>6. Dobrovoľnosť a odvolanie súhlasu</h2>
+  <p>Správu nemusíte nahrať. Bez výslovného súhlasu aplikácia AI spracovanie nespustí. Súhlas môžete odvolať pre budúce spracovanie tým, že ďalšiu správu nenahráte a vymažete lokálne údaje. Už dokončenú požiadavku nemožno spätne odoslať „naspäť“, no môžete nás kontaktovať v súvislosti so svojimi právami.</p>
+
+  <h2>7. Vaše práva</h2>
+  <p>Za podmienok GDPR máte právo na prístup, opravu, vymazanie, obmedzenie spracúvania, prenosnosť, námietku a odvolanie súhlasu. Keďže aplikácia nemá používateľské účty a históriu uchováva iba vo vašom zariadení, OZ nemusí byť schopné údaje na zariadení identifikovať alebo vyhľadať.</p>
+  <p>Žiadosť môžete poslať na <a href="mailto:info@zdraviezrozumitelne.sk">info@zdraviezrozumitelne.sk</a>. Máte tiež právo podať návrh alebo sťažnosť na Úrad na ochranu osobných údajov SR, Námestie 1. mája 18, 811 06 Bratislava, <a href="mailto:statny.dozor@pdp.gov.sk">statny.dozor@pdp.gov.sk</a>.</p>
+
+  <h2>8. Deti, profilovanie a automatizované rozhodovanie</h2>
+  <p>Služba je určená iba osobám od 18 rokov. Výstup AI sa nepoužíva na rozhodovanie s právnymi alebo obdobne významnými účinkami. Aplikácia nevykonáva reklamné profilovanie a v tejto verzii nepoužíva analytické ani reklamné cookies.</p>
+
+  <h2>9. Bezpečnosť a zmeny</h2>
+  <p>Používame šifrovaný prenos HTTPS, obmedzenie domén, obmedzenie počtu požiadaviek a logovanie bez obsahu zdravotných správ. Žiadna internetová služba však nemôže zaručiť absolútnu bezpečnosť. Pri významnej zmene spracúvania aktualizujeme tieto zásady a verziu súhlasu.</p>
+
+  <p class="small muted">Tieto zásady opisujú aktuálnu verejnú pilotnú verziu. Posledná aktualizácia: 8. augusta 2026.</p>
+  <a class="back" href="index.html">← Späť do aplikácie</a>
+</main>
+</body>
+</html>
