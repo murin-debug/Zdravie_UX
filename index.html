@@ -11,6 +11,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ZEVIORA">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
@@ -287,14 +288,14 @@
     }
 
     .warning-box{
-      border:1px solid #f1c3c3;
-      background:var(--danger-bg);
-      color:#a73535;
+      border:1px solid #cfe5e7;
+      background:#f2f9fa;
+      color:#315d63;
       border-radius:18px;
       padding:16px;
       line-height:1.45;
       font-size:15px;
-      font-weight:700;
+      font-weight:600;
       margin-top:14px;
     }
 
@@ -576,6 +577,31 @@
       color:var(--brand-dark);
     }
 
+    .privacy-summary{
+      font-weight:600;
+    }
+
+    .privacy-summary a{
+      color:var(--brand-dark);
+      font-weight:700;
+    }
+
+    .install-card{
+      border:1px solid #cfe5e7;
+      background:#f5fbfb;
+      border-radius:18px;
+      padding:16px;
+      line-height:1.55;
+    }
+
+    /* Výsledky patria pod oba horné stĺpce a na počítači majú plnú šírku. */
+    .grid-main > .result-grid,
+    .grid-main > .hero-actions,
+    .grid-main > .card,
+    .grid-main > .collapsible{
+      grid-column:1 / -1;
+    }
+
     @media (max-width: 940px){
       .grid-main,
       .result-grid,
@@ -634,7 +660,7 @@
       <div class="brand-copy">
         <div class="brand-identity" id="appTitle">Zdravie zrozumiteľne</div>
         <div class="brand-operator">Slovenská verzia · prevádzkuje Zdravie zrozumiteľne, o.z.</div>
-        <div class="pilot-badge">Verejný pilot · 18+</div>
+        <div class="pilot-badge">Verejný pilot</div>
       </div>
     </div>
   </div>
@@ -707,29 +733,24 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
 
         <div class="stack">
           <div class="card">
-            <h2 id="safeTitle">Bezpečnosť</h2>
-           <div class="safety-box">
-✅ Originálny obrázok sa do AI neposiela<br>
-✅ História sa ukladá iba v tomto zariadení<br>
-⚠️ Rozpoznaný text sa po vašom výslovnom súhlase odošle cez náš backend do OpenAI API<br>
-⚠️ OpenAI môže obsah bezpečnostne uchovávať najviac 30 dní; štandardne ho nepoužíva na trénovanie modelov
-</div>
+            <h2 id="safeTitle">Vaše súkromie</h2>
+           <div class="safety-box privacy-summary">
+             Fotografia zostáva vo vašom zariadení. Na vytvorenie vysvetlenia sa odošle iba rozpoznaný text.<br>
+             <a href="privacy.html" target="_blank" rel="noopener">Ako chránime vaše údaje</a>
+           </div>
 <div class="consent-stack">
   <label class="consent-row">
     <input type="checkbox" id="gdprConsent" />
-    <span><strong>Výslovne súhlasím</strong> so spracovaním údajov o zdraví a s dočasným odoslaním rozpoznaného textu cez backend ZEVIORA do OpenAI API na vytvorenie zrozumiteľného vysvetlenia.</span>
+    <span>Chcem vysvetliť túto správu pomocou AI a <strong>výslovne súhlasím</strong>, aby sa rozpoznaný text vrátane údajov o zdraví spracoval prostredníctvom OpenAI API.</span>
   </label>
   <label class="consent-row">
     <input type="checkbox" id="termsConsent" />
-    <span>Potvrdzujem, že mám najmenej 18 rokov a súhlasím s <a href="terms.html" target="_blank" rel="noopener">Podmienkami používania</a>. Prečítal/a som si <a href="privacy.html" target="_blank" rel="noopener">Zásady ochrany osobných údajov</a>.</span>
+    <span>Som dospelý/á a súhlasím s <a href="terms.html" target="_blank" rel="noopener">Podmienkami používania</a>.</span>
   </label>
-  <p class="tiny muted" style="margin:0;">
-    Backend obsah správy neukladá do databázy. Výsledok a história zostávajú v tomto zariadení, kým ich nevymažete. Súhlas môžete odmietnuť tým, že správu nenahráte.
-  </p>
 </div>
             
             <div class="warning-box" id="warningBoxText">
-              ⚠️ AI môže urobiť chybu a nenahrádza lekára. Pri náhlom ohrození zdravia volajte 155 alebo 112.
+              ZEVIORA pomáha porozumieť zdravotnej správe, nenahrádza však lekára. V naliehavom prípade volajte 155 alebo 112.
             </div>
 
             <div style="margin-top:14px;">
@@ -962,9 +983,26 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
             <a href="privacy.html" target="_blank" rel="noopener">Ochrana osobných údajov</a>
             <a href="terms.html" target="_blank" rel="noopener">Podmienky používania</a>
           </div>
+          <details style="margin-top:14px;">
+            <summary>Technické informácie o súkromí</summary>
+            <div class="small" style="margin-top:10px;line-height:1.6;">
+              Originálny obrázok sa do AI neposiela a história zostáva v tomto zariadení. Rozpoznaný text sa po výslovnom súhlase odošle cez zabezpečený backend do OpenAI API. Podľa štandardných nastavení môže byť obsah súčasťou bezpečnostných logov najviac 30 dní a nepoužíva sa na trénovanie modelov.
+            </div>
+          </details>
         </div>
         <div class="hero-actions" style="margin-bottom:0;">
           <a class="btn-like primary" style="display:inline-flex;align-items:center;justify-content:center;" href="mailto:info@zdraviezrozumitelne.sk?subject=Sp%C3%A4tn%C3%A1%20v%C3%A4zba%20k%20aplik%C3%A1cii%20ZEVIORA">Napísať nám</a>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <h3>Pridať ZEVIORA do mobilu</h3>
+        <p class="lead">Aplikáciu si môžete uložiť na plochu a otvárať ju rovnako jednoducho ako bežnú aplikáciu.</p>
+        <button class="primary" id="installAppBtn" onclick="installZeviora()">Pridať do mobilu</button>
+        <div id="installInstructions" class="install-card hidden" style="margin-top:14px;">
+          <strong>iPhone alebo iPad:</strong> otvorte ZEVIORA v Safari, klepnite na Zdieľať a vyberte Pridať na plochu. Zapnite Otvoriť ako webovú aplikáciu a potvrďte Pridať.<br><br>
+          <strong>Android:</strong> otvorte ZEVIORA v Chrome, klepnite na ponuku ⋮ a vyberte Nainštalovať aplikáciu alebo Inštalovať a vytvoriť odkaz.<br><br>
+          <span class="tiny muted">Ikona ZEVIORA sa zobrazí na ploche zariadenia. Lokálne údaje sa medzi rôznymi zariadeniami automaticky neprenášajú.</span>
         </div>
       </div>
     </section>
@@ -998,7 +1036,8 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
   <script>
     const AI_ENDPOINT = "https://zdravie-ai-backend.onrender.com/analyze";
     const APP_LANG_KEY = "zz_app_lang";
-    const CONSENT_VERSION = "2026-08-08-v1";
+    const CONSENT_VERSION = "2026-08-08-v2";
+    let deferredInstallPrompt = null;
     window.lastStructuredAnalysis = null;
 window.currentOriginalFiles = [];
     const TEXTS = {
@@ -1231,6 +1270,37 @@ async function showOriginalReport(reportId) {
       const box = document.getElementById("howItWorksBox");
       if (box) box.classList.toggle("hidden");
     }
+
+    async function installZeviora() {
+      const instructions = document.getElementById("installInstructions");
+
+      if (!deferredInstallPrompt) {
+        if (instructions) instructions.classList.toggle("hidden");
+        return;
+      }
+
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+
+      if (choice?.outcome !== "accepted" && instructions) {
+        instructions.classList.remove("hidden");
+      }
+    }
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredInstallPrompt = null;
+      const button = document.getElementById("installAppBtn");
+      if (button) {
+        button.textContent = "ZEVIORA je pridaná v zariadení";
+        button.disabled = true;
+      }
+    });
 
     function setLanguage(lang) {
       localStorage.setItem(APP_LANG_KEY, lang);
@@ -2014,7 +2084,7 @@ showDetectedMetaFromAnalysis();
         if (primary) primary.value = "";
         if (secondary) secondary.value = "";
 
-        alert("Pred nahratím správy je potrebný výslovný súhlas so spracovaním údajov o zdraví, potvrdenie veku 18+ a prijatie podmienok.");
+        alert("Na vysvetlenie správy najprv potvrďte oba súhlasy v časti Vaše súkromie.");
         return;
       }
 

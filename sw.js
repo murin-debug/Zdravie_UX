@@ -1,4 +1,4 @@
-const CACHE_NAME = "zeviora-sk-pilot-v1-20260808";
+const CACHE_NAME = "zeviora-sk-pilot-v2-20260808";
 
 const STATIC_ASSETS = [
   "./",
