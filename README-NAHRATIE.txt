@@ -29,8 +29,9 @@ Po nasadení skontroluj:
 5. test jednej neosobnej/skúšobnej lekárskej správy,
 6. zobrazenie liekov vo výsledku aj na karte Moje lieky,
 7. vymazanie skúšobnej správy a lokálnych údajov.
-8. tlačidlo Pridať ZEVIORA do mobilu na domovskej obrazovke,
-9. otvorenie Profilu a zobrazenie podrobného návodu na inštaláciu.
+8. tlačidlo Uložiť ZEVIORA do mobilu na domovskej obrazovke,
+9. zobrazenie inštalačného okna bez preskakovania na inú časť stránky,
+10. otvorenie Profilu a zobrazenie podrobného návodu na inštaláciu.
 
 Poznámka: vstup podporuje fotografie/obrázky správ. Tlač a export
 výsledku do PDF sú samostatné funkcie; nahrávanie PDF zatiaľ podporované nie je.

@@ -594,6 +594,83 @@
       line-height:1.55;
     }
 
+    .install-modal{
+      position:fixed;
+      inset:0;
+      z-index:10000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:rgba(18,32,47,.58);
+      backdrop-filter:blur(4px);
+    }
+
+    .install-dialog{
+      width:min(520px,100%);
+      max-height:calc(100vh - 40px);
+      overflow:auto;
+      background:#fff;
+      border:1px solid #dce7ea;
+      border-radius:24px;
+      box-shadow:0 24px 70px rgba(18,32,47,.28);
+      padding:24px;
+    }
+
+    .install-dialog-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .install-dialog h2{
+      margin:0;
+      color:#162033;
+    }
+
+    .install-close{
+      width:40px;
+      height:40px;
+      padding:0;
+      border-radius:50%;
+      background:#edf3f5;
+      color:#263546;
+      font-size:22px;
+      line-height:1;
+      flex:0 0 auto;
+    }
+
+    .install-steps{
+      display:grid;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .install-step{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:12px 14px;
+      border-radius:16px;
+      background:#f5fbfb;
+      border:1px solid #d5e9e9;
+      line-height:1.45;
+    }
+
+    .step-number{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:var(--primary);
+      color:#fff;
+      font-weight:800;
+      flex:0 0 auto;
+    }
+
     /* Výsledky patria pod oba horné stĺpce a na počítači majú plnú šírku. */
     .grid-main > .result-grid,
     .grid-main > .hero-actions,
@@ -735,7 +812,7 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
           <div class="card">
             <h2>Majte ZEVIORA vždy poruke</h2>
             <p class="lead">Pridajte si aplikáciu na plochu mobilu a otvárajte ju cez vlastnú ikonu.</p>
-            <button class="primary" id="installAppBtnHome" onclick="installZeviora()">Pridať ZEVIORA do mobilu</button>
+            <button class="primary" id="installAppBtnHome" onclick="installZeviora()">Uložiť ZEVIORA do mobilu</button>
 
             <div style="margin-top:20px;padding-top:18px;border-top:1px solid #e2eaed;">
               <h3 id="safeTitle" style="margin-bottom:10px;">Pred spracovaním správy</h3>
@@ -991,7 +1068,7 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
       <div class="card" style="margin-top:16px;">
         <h3>Pridať ZEVIORA do mobilu</h3>
         <p class="lead">Aplikáciu si môžete uložiť na plochu a otvárať ju rovnako jednoducho ako bežnú aplikáciu.</p>
-        <button class="primary" id="installAppBtn" onclick="installZeviora()">Pridať do mobilu</button>
+        <button class="primary" id="installAppBtn" onclick="installZeviora()">Uložiť do mobilu</button>
         <div id="installInstructions" class="install-card hidden" style="margin-top:14px;">
           <strong>iPhone alebo iPad:</strong> otvorte ZEVIORA v Safari, klepnite na Zdieľať a vyberte Pridať na plochu. Zapnite Otvoriť ako webovú aplikáciu a potvrďte Pridať.<br><br>
           <strong>Android:</strong> otvorte ZEVIORA v Chrome, klepnite na ponuku ⋮ a vyberte Nainštalovať aplikáciu alebo Inštalovať a vytvoriť odkaz.<br><br>
@@ -1000,6 +1077,22 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
       </div>
     </section>
   </main>
+
+  <div id="installModal" class="install-modal hidden" role="dialog" aria-modal="true" aria-labelledby="installModalTitle" onclick="closeInstallHelp(event)">
+    <div class="install-dialog" onclick="event.stopPropagation()">
+      <div class="install-dialog-head">
+        <div>
+          <h2 id="installModalTitle">Uložiť ZEVIORA do mobilu</h2>
+          <p class="lead" id="installModalLead" style="margin-top:8px;margin-bottom:0;"></p>
+        </div>
+        <button class="install-close" type="button" aria-label="Zavrieť" onclick="closeInstallHelp()">×</button>
+      </div>
+      <div id="installModalSteps" class="install-steps"></div>
+      <div class="hero-actions" style="margin-bottom:0;">
+        <button class="primary" type="button" onclick="closeInstallHelp()">Rozumiem</button>
+      </div>
+    </div>
+  </div>
 
   <nav class="nav-bottom">
     <div class="nav-inner">
@@ -1264,24 +1357,95 @@ async function showOriginalReport(reportId) {
       if (box) box.classList.toggle("hidden");
     }
 
-    async function installZeviora() {
-      const instructions = document.getElementById("installInstructions");
+    function isZevioraInstalled() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
 
-      if (!deferredInstallPrompt) {
-        showTab("profile");
-        if (instructions) {
-          instructions.classList.remove("hidden");
-          setTimeout(() => instructions.scrollIntoView({ behavior: "smooth", block: "center" }), 250);
-        }
+    function installStep(number, text) {
+      return `<div class="install-step"><span class="step-number">${number}</span><span>${text}</span></div>`;
+    }
+
+    function showInstallHelp(message = "") {
+      const modal = document.getElementById("installModal");
+      const lead = document.getElementById("installModalLead");
+      const steps = document.getElementById("installModalSteps");
+      if (!modal || !lead || !steps) return;
+
+      const ua = navigator.userAgent || "";
+      const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isAndroid = /Android/i.test(ua);
+      const isMac = /Macintosh|Mac OS X/i.test(ua);
+
+      if (isZevioraInstalled()) {
+        lead.textContent = "ZEVIORA je už otvorená ako aplikácia. Jej ikonu nájdete na ploche zariadenia.";
+        steps.innerHTML = "";
+      } else if (isIOS) {
+        lead.textContent = message || "Na iPhone a iPade sa aplikácia pridá cez ponuku Safari:";
+        steps.innerHTML = [
+          installStep(1, "Otvorte túto stránku v prehliadači <strong>Safari</strong>."),
+          installStep(2, "Klepnite na tlačidlo <strong>Zdieľať</strong> (ikona štvorca so šípkou nahor)."),
+          installStep(3, "Vyberte <strong>Pridať na plochu</strong>."),
+          installStep(4, "Zapnite <strong>Otvoriť ako webovú aplikáciu</strong> a klepnite na <strong>Pridať</strong>.")
+        ].join("");
+      } else if (isAndroid) {
+        lead.textContent = message || "Na Androide sa aplikácia pridá cez ponuku Chrome:";
+        steps.innerHTML = [
+          installStep(1, "Otvorte ZEVIORA v prehliadači <strong>Chrome</strong>."),
+          installStep(2, "Klepnite na ponuku <strong>⋮</strong> vpravo hore."),
+          installStep(3, "Vyberte <strong>Nainštalovať aplikáciu</strong> alebo <strong>Pridať na plochu</strong>."),
+          installStep(4, "Potvrďte inštaláciu. Ikona ZEVIORA sa zobrazí na ploche.")
+        ].join("");
+      } else if (isMac) {
+        lead.textContent = message || "Na Macu ju môžete pridať ako samostatnú webovú aplikáciu:";
+        steps.innerHTML = [
+          installStep(1, "V Safari otvorte ZEVIORA a v hornom menu vyberte <strong>Súbor</strong>."),
+          installStep(2, "Kliknite na <strong>Pridať do Docku</strong> a potvrďte <strong>Pridať</strong>."),
+          installStep(3, "V Chrome môžete použiť ikonu inštalácie v adresnom riadku alebo ponuku prehliadača.")
+        ].join("");
+      } else {
+        lead.textContent = message || "Ak sa systémové okno neotvorilo, použite ponuku svojho prehliadača:";
+        steps.innerHTML = [
+          installStep(1, "Otvorte hlavnú ponuku prehliadača."),
+          installStep(2, "Vyberte <strong>Nainštalovať aplikáciu</strong> alebo <strong>Pridať na plochu</strong>."),
+          installStep(3, "Potvrďte pridanie ikony ZEVIORA.")
+        ].join("");
+      }
+
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+      modal.querySelector(".install-close")?.focus();
+    }
+
+    function closeInstallHelp(event) {
+      if (event && event.target !== event.currentTarget) return;
+      const modal = document.getElementById("installModal");
+      if (modal) modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    async function installZeviora() {
+      if (isZevioraInstalled()) {
+        showInstallHelp();
         return;
       }
 
-      deferredInstallPrompt.prompt();
-      const choice = await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
+      if (!deferredInstallPrompt) {
+        showInstallHelp();
+        return;
+      }
 
-      if (choice?.outcome !== "accepted" && instructions) {
-        instructions.classList.remove("hidden");
+      try {
+        const promptEvent = deferredInstallPrompt;
+        deferredInstallPrompt = null;
+        await promptEvent.prompt();
+        const choice = await promptEvent.userChoice;
+
+        if (choice?.outcome !== "accepted") {
+          showInstallHelp("Inštalácia nebola potvrdená. Môžete ju spustiť aj cez ponuku prehliadača:");
+        }
+      } catch (error) {
+        console.error("Inštaláciu sa nepodarilo otvoriť:", error);
+        showInstallHelp("Systémové okno sa nepodarilo otvoriť. Použite tento postup:");
       }
     }
 
@@ -1298,6 +1462,10 @@ async function showOriginalReport(reportId) {
         button.textContent = "ZEVIORA je pridaná v zariadení";
         button.disabled = true;
       });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeInstallHelp();
     });
 
     function setLanguage(lang) {
