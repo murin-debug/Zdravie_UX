@@ -819,7 +819,7 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
 <div class="consent-stack">
   <label class="consent-row">
     <input type="checkbox" id="gdprConsent" />
-    <span>Chcem vysvetliť túto správu pomocou AI a <strong>výslovne súhlasím</strong>, aby sa rozpoznaný text vrátane <strong>mena pacienta, ďalších identifikačných údajov a údajov o zdraví</strong> spracoval cez zabezpečený backend ZEVIORA prostredníctvom OpenAI API. Rozumiem, že meno ani iné údaje uvedené v správe sa pred odoslaním automaticky neodstraňujú.</span>
+    <span>Chcem získať zrozumiteľné vysvetlenie tejto správy a súhlasím, aby bol jej rozpoznaný text – vrátane mena pacienta, ďalších identifikačných a zdravotných údajov – odoslaný na spracovanie do AI služby. Rozumiem, že tieto údaje sa pred odoslaním automaticky neodstraňujú.</span>
   </label>
   <label class="consent-row">
     <input type="checkbox" id="termsConsent" />
@@ -1122,7 +1122,7 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
   <script>
     const AI_ENDPOINT = "https://zdravie-ai-backend.onrender.com/analyze";
     const APP_LANG_KEY = "zz_app_lang";
-    const CONSENT_VERSION = "2026-08-20-v3";
+    const CONSENT_VERSION = "2026-08-21-v4";
     let deferredInstallPrompt = null;
     window.lastStructuredAnalysis = null;
 window.currentOriginalFiles = [];
