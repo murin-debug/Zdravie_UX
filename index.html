@@ -819,7 +819,7 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
 <div class="consent-stack">
   <label class="consent-row">
     <input type="checkbox" id="gdprConsent" />
-    <span>Chcem vysvetliť túto správu pomocou AI a <strong>výslovne súhlasím</strong>, aby sa rozpoznaný text vrátane údajov o zdraví spracoval prostredníctvom OpenAI API.</span>
+    <span>Chcem vysvetliť túto správu pomocou AI a <strong>výslovne súhlasím</strong>, aby sa rozpoznaný text vrátane <strong>mena pacienta, ďalších identifikačných údajov a údajov o zdraví</strong> spracoval cez zabezpečený backend ZEVIORA prostredníctvom OpenAI API. Rozumiem, že meno ani iné údaje uvedené v správe sa pred odoslaním automaticky neodstraňujú.</span>
   </label>
   <label class="consent-row">
     <input type="checkbox" id="termsConsent" />
@@ -1122,7 +1122,7 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
   <script>
     const AI_ENDPOINT = "https://zdravie-ai-backend.onrender.com/analyze";
     const APP_LANG_KEY = "zz_app_lang";
-    const CONSENT_VERSION = "2026-08-08-v2";
+    const CONSENT_VERSION = "2026-08-20-v3";
     let deferredInstallPrompt = null;
     window.lastStructuredAnalysis = null;
 window.currentOriginalFiles = [];
@@ -1862,6 +1862,13 @@ function emailAiReport() {
     }
 
     async function analyzeText() {
+      const healthDataConsent = document.getElementById("gdprConsent")?.checked === true;
+      const termsConsent = document.getElementById("termsConsent")?.checked === true;
+
+      if (!healthDataConsent || !termsConsent) {
+        throw new Error("Pred odoslaním správy potvrďte oba súhlasy.");
+      }
+
       const text = document.getElementById("output")?.value || "";
       if (!text.trim() || text.includes("Prebieha OCR")) {
         throw new Error("Text správy ešte nie je pripravený pre AI analýzu.");
@@ -1882,9 +1889,10 @@ function emailAiReport() {
             specialty,
             documentType,
             consent: {
-              healthData: true,
-              termsAccepted: true,
-              ageConfirmed: true,
+              healthData: healthDataConsent,
+              identityData: healthDataConsent,
+              termsAccepted: termsConsent,
+              ageConfirmed: termsConsent,
               version: CONSENT_VERSION
             }
           })
@@ -2250,12 +2258,16 @@ showDetectedMetaFromAnalysis();
         if (primary) primary.value = "";
         if (secondary) secondary.value = "";
 
-        alert("Na vysvetlenie správy najprv potvrďte oba súhlasy v časti Vaše súkromie.");
+        alert("Na vysvetlenie správy najprv potvrďte oba súhlasy v časti Pred spracovaním správy.");
         return;
       }
 
       localStorage.setItem("zz_consent_receipt", JSON.stringify({
         version: CONSENT_VERSION,
+        healthData: true,
+        identityData: true,
+        termsAccepted: true,
+        ageConfirmed: true,
         acceptedAt: new Date().toISOString()
       }));
       
