@@ -759,6 +759,21 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
               <input type="text" id="profileName" placeholder="Zadajte meno osoby" />
             </div>
 
+            <div style="margin:16px 0 4px;padding:16px;border:1px solid #d6e7e9;background:#f5fbfb;border-radius:18px;">
+              <h3 id="safeTitle" style="margin-bottom:10px;">Pred spracovaním správy</h3>
+              <div class="consent-stack">
+                <label class="consent-row">
+                  <input type="checkbox" id="gdprConsent" />
+                  <span>Chcem získať zrozumiteľné vysvetlenie tejto správy a súhlasím, aby bol jej rozpoznaný text – vrátane mena pacienta, ďalších identifikačných a zdravotných údajov – odoslaný na spracovanie do AI služby. Rozumiem, že tieto údaje sa pred odoslaním automaticky neodstraňujú.</span>
+                </label>
+                <label class="consent-row">
+                  <input type="checkbox" id="termsConsent" />
+                  <span>Som dospelý/á a súhlasím s <a href="terms.html" target="_blank" rel="noopener">Podmienkami používania</a>.</span>
+                </label>
+                <a class="tiny" href="privacy.html" target="_blank" rel="noopener" style="color:var(--brand-dark);font-weight:700;">Ochrana osobných údajov</a>
+              </div>
+            </div>
+
             <div class="hero-actions">
               <label class="btn-like primary" style="display:inline-flex;align-items:center;justify-content:center;">
                 <span id="uploadBtnText">＋ Nahrať správu</span>
@@ -814,20 +829,7 @@ Získate zrozumiteľné vysvetlenie a prehľad výsledkov, liekov a odporúčan�
             <p class="lead">Pridajte si aplikáciu na plochu mobilu a otvárajte ju cez vlastnú ikonu.</p>
             <button class="primary" id="installAppBtnHome" onclick="installZeviora()">Uložiť ZEVIORA do mobilu</button>
 
-            <div style="margin-top:20px;padding-top:18px;border-top:1px solid #e2eaed;">
-              <h3 id="safeTitle" style="margin-bottom:10px;">Pred spracovaním správy</h3>
-<div class="consent-stack">
-  <label class="consent-row">
-    <input type="checkbox" id="gdprConsent" />
-    <span>Chcem získať zrozumiteľné vysvetlenie tejto správy a súhlasím, aby bol jej rozpoznaný text – vrátane mena pacienta, ďalších identifikačných a zdravotných údajov – odoslaný na spracovanie do AI služby. Rozumiem, že tieto údaje sa pred odoslaním automaticky neodstraňujú.</span>
-  </label>
-  <label class="consent-row">
-    <input type="checkbox" id="termsConsent" />
-    <span>Som dospelý/á a súhlasím s <a href="terms.html" target="_blank" rel="noopener">Podmienkami používania</a>.</span>
-  </label>
-  <a class="tiny" href="privacy.html" target="_blank" rel="noopener" style="color:var(--brand-dark);font-weight:700;">Ochrana osobných údajov</a>
-</div>
-            </div>
+
           </div>
         </div>
       </div>
